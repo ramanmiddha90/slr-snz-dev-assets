@@ -1,0 +1,750 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+@font-face {
+    font-family: Futura Now Text;
+    src: url(./../fonts/FuturaNowTextMedium_normal_normal.eot);
+    src: url(./../fonts/FuturaNowTextMedium_normal_normal.woff2) format("woff2"),url(./../fonts/FuturaNowTextMedium_normal_normal.woff) format("woff"),url(./../fonts/FuturaNowTextMedium_normal_normal.ttf) format("truetype"),url("./../fonts/FuturaNowTextMedium_normal_normal.svg#Futura Now Text") format("svg");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap
+}
+
+@font-face {
+    font-family: Futura Now Text;
+    src: url(./../fonts/FuturaNowTextRegular_normal_normal.eot);
+    src: url(./../fonts/FuturaNowTextRegular_normal_normal.woff2) format("woff2"),url(./../fonts/FuturaNowTextRegular_normal_normal.woff) format("woff"),url(./../fonts/FuturaNowTextRegular_normal_normal.ttf) format("truetype"),url("./../fonts/FuturaNowTextRegular_normal_normal.svg#Futura Now Text") format("svg");
+}
+
+body {
+    background-color: #F1ECE9;
+    font-family: "Futura Now Text",sans-serif;
+    text-align: left;
+    margin-top: 75px;
+}
+
+.invitedRegistration .intro p {
+    display: none;
+}
+
+.profileEditinvalidUser .intro p {
+    display: none;
+}
+
+h1 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+fieldset label {
+    height: auto;
+    display: flex;
+    margin-bottom: 24px;
+    font-weight: 400;
+}
+
+    fieldset label:last-child {
+        margin-bottom: 8px;
+    }
+
+.wrapper {
+    /*width: 100%;*/
+    background-color: white;
+    padding: 32px; /*padding added */
+}
+
+.intro {
+    margin: 16px 0px;
+}
+
+    .intro p {
+        text-align: left;
+        /* margin-bottom: 48px;*/
+    }
+
+.customLabelIntro {
+    text-align: left;
+    margin-bottom: 48px !important;
+    margin-top: 48px !important;
+    color: #4d4d57;
+}
+
+#intropageheader_lbl {
+    font-size: 24px;
+}
+
+.intropageheader {
+    margin-bottom: 24px !important;
+    text-align: left;
+    font-size: 24px;
+}
+/*new class created */
+input::placeholder, select::placeholder {
+    font-size: 16px;
+}
+
+#logo {
+    width: 70%;
+    /* margin: 0px auto; */
+    margin: 0 auto 48px; /*updated value*/
+    padding-top: 0; /*updated padding from 20px to 0*/
+}
+
+#pattern {
+    background-image: url(./blue_carbon_open_pattern_tile_120.png);
+    background-repeat: repeat-x;
+    width: 100%;
+    height: 43px;
+}
+
+#form {
+    padding: 0; /*udpated from 20px to 0*/
+}
+/*.attrEntry {
+    margin-bottom: 40px;
+}*/
+#attributeVerification #attributeList ul li input[type=checkbox], #attributeVerification #attributeList ul li input[type=radio] {
+    width: 24px !important;
+    min-width: 24px !important;
+    box-shadow: none;
+    height: 24px;
+    display: inline-block;
+    float: left;
+    clear: left;
+    margin: 6px 8px 0 0;
+    border-width: 1px !important;
+    border-radius: 8px;
+    border-color: rgb(152, 152, 162);
+    appearance: auto !important;
+}
+
+
+#attributeVerification #attributeList ul li input {
+    width: 100%;
+}
+
+#attributeList ul li input[type=checkbox] {
+    border: none;
+    position: relative;
+    width: 24px;
+    height: 24px;
+    font-size: 20px;
+    margin: 0;
+    display: inline-block;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: 0;
+    text-indent: 0;
+}
+
+
+#attributeList ul li input {
+    height: 50px;
+    width: 70%;
+    border-radius: 0.5rem;
+    text-indent: 0; /*udpated value from 20px to 0*/
+    padding: 12px 16px;
+}
+
+#attributeVerification #attributeList ul li.CheckboxMultiSelect label:nth-last-child(2) {
+    margin-bottom: 40px;
+}
+
+input[type=checkbox], input[type=radio] {
+    margin: 4px 0 0;
+    margin-top: 1px\9;
+    line-height: normal;
+}
+
+input[type=checkbox], input[type=radio] {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0;
+}
+
+@media only screen and (min-width: 768px) {
+    .wrapper {
+        width: 468px;
+        margin: 20px auto;
+        border-radius: 16px;
+        box-shadow: 0px 0px 0px 1px rgba(116,116,116, 0.3);
+        opacity: 1;
+        border: 1px
+    }
+
+    #logo {
+        display: block;
+        width: 250px;
+        /* margin: 5px auto; */
+        margin: 0 auto 48px; /*updated value*/
+    }
+}
+
+select {
+    text-align: left !important;
+    font-size: 18px !important;
+    margin: 0 0 16px 0;
+    padding: 12px 16px;
+    text-align: left;
+    text-decoration-color: rgb(0, 28, 74);
+    text-decoration-line: none;
+    text-decoration-style: solid;
+    text-decoration-thickness: auto;
+    font-family: "Futura Now Text","Volta: Modern: Display";
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    border-width: 1px !important;
+    border-radius: 8px;
+    border-color: rgb(152, 152, 162);
+    width: 100%;
+    opacity: 1; /*added opacity to 1 from 0.7*/
+    line-height: 24px;
+    /* added class to show custom image */
+
+    -webkit-appearance: none;
+    -moz-appearance: window;
+    background-image: url("../objects/arrow-down.svg");
+    background-repeat: no-repeat;
+    background-position: calc(100% - 12px) center;
+}
+
+button {
+    align-items: center;
+    appearance: button;
+    background-color: #1c59b5;
+    align-items: center;
+    border-bottom-color: rgb(0, 28, 74);
+    border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 50px;
+    border-bottom-style: none;
+    border-bottom-width: 0px;
+    border-image-outset: 0;
+    border-image-repeat: stretch;
+    border-image-slice: 100%;
+    border-image-source: none;
+    border-image-width: 1;
+    border-left-color: rgb(0, 28, 74);
+    border-left-style: none;
+    border-left-width: 0px;
+    border-right-color: rgb(0, 28, 74);
+    border-right-style: none;
+    border-right-width: 0px;
+    border-top-color: rgb(0, 28, 74);
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+    border-top-style: none;
+    /* margin-left: 10px;; */
+    box-shadow: rgba(255, 255, 255, 0.15) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.075) 0px 1px 1px 0px;
+    box-sizing: border-box;
+    color: white;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: "Futura Now Text","Volta: Modern: Display";
+    /* font-family: "Futura Now Text"; */
+    font-size: 1rem;
+    font-weight: 500;
+    height: 48px;
+    justify-content: center;
+    letter-spacing: -0.2px;
+    line-height: calc(19.2 / 16 * 1rem);
+    margin-bottom: 16px;
+    margin-right: 16px;
+    padding-bottom: 12px;
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-top: 12px;
+    text-align: center;
+    text-decoration-color: rgb(0, 28, 74);
+    text-decoration-line: none;
+    text-decoration-style: solid;
+    text-decoration-thickness: auto;
+    transition-delay: 0s;
+    transition-duration: 0s;
+    transition-property: none;
+    transition-timing-function: ease;
+    user-select: none;
+    vertical-align: middle;
+    width: fit-content;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+#api {
+    display: block !important;
+}
+
+#logo {
+    display: block !important;
+}
+
+button:hover {
+    color: rgb(0, 28, 74);
+    background-color: #a8d5ff;
+}
+
+#cancel, #customCancel, .sendNewCode {
+    color: rgb(0, 28, 74);
+    background-color: #a8d5ff;
+}
+
+    #cancel:hover, #customCancel:hover, .sendNewCode:hover {
+        background-color: #1c59b5;
+        color: white;
+    }
+/* #continue, #cancel, #email_ver_but_edit {
+    float: left; 
+} */
+
+#verifying_blurb {
+    color: #FFF;
+}
+
+.error {
+    color: red;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.Password {
+    clear: both;
+}
+
+#attributeVerification .buttons {
+    margin-top: 24px; /*updated value from 20px to 24px*/
+}
+
+fieldset {
+    border: none;
+    margin-top: 16px;
+}
+
+    fieldset legend {
+        margin: 0 0 8px 0;
+    }
+/*
+.TnCsAck_li{
+    margin-top:30px; 
+}*/
+/*legend{
+    display:none;   
+}*/
+.heading, #ErrorMappings_label, #ErrorMappings,#FormConfig_label,#FormConfig, #CurrentSignInStatus,
+#CurrentSignInStatus_label, #invitationCode, #invitationCode_label, #passwordResetPortalUserURl_label, .FieldInfo_li,
+#passwordResetPortalUserURl, #IDPName_label, #IDPName, #lbl_pitcherURLError, #queryparams_label, #queryparams, #AccessToken, #AccessToken_label {
+    display: none;
+}
+
+#lbl_pitcherURLError {
+    color: red;
+    width: 500px;
+    margin: 20px auto;
+}
+
+#lblUpdateMessage {
+    color: red;
+}
+
+#lblPESuccess {
+    font-weight: bold;
+}
+
+.verifying-modal {
+    clear: both;
+}
+
+.verificationInfoText, .verificationSuccessText, .verificationErrorText {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 0px;
+    margin-right: 0px;
+    display: block;
+    font-family: "Futura Now Text";
+    font-size: 18px;
+    font-weight: 400;
+    height: auto;
+    letter-spacing: -0.2px;
+    line-height: 21.6px;
+}
+
+div.buttons {
+    /* min-height: 36px; not required */
+    /* margin-bottom: 16px; not required */
+    float: left;
+}
+
+#customCancel, #cancel {
+    float: left !important;
+}
+
+div#api > div.buttons:first-child {
+    display: none;
+}
+
+
+input {
+    background-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(152, 152, 162);
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-image-outset: 0;
+    border-image-repeat: stretch;
+    border-image-slice: 100%;
+    border-image-source: none;
+    border-image-width: 1;
+    border-left-color: rgb(152, 152, 162);
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-right-color: rgb(152, 152, 162);
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-top-color: rgb(152, 152, 162);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-top-style: solid;
+    border-top-width: 1px;
+    box-shadow: none;
+    box-sizing: border-box;
+    color: #001c4a;
+    cursor: text;
+    display: flex;
+    flex-direction: column;
+    font-family: "Futura Now Text";
+    font-feature-settings: normal;
+    font-kerning: auto;
+    font-optical-sizing: auto;
+    font-size: 18px;
+    font-stretch: 100%;
+    font-style: normal;
+    font-variant-alternates: normal;
+    font-variant-caps: normal;
+    font-variant-east-asian: normal;
+    font-weight: 400;
+    letter-spacing: -0.2px;
+    line-height: 21.6px;
+    margin-bottom: 16px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 0px;
+    padding-bottom: 14px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 14px;
+    min-width: 235px;
+    outline-color: rgb(77, 77, 87);
+    outline-offset: -2px;
+    outline-style: none;
+    outline-width: 0px;
+    padding-bottom: 12px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 12px;
+    text-align: start;
+    text-indent: 0px;
+    text-rendering: auto;
+    text-shadow: none;
+    text-transform: none;
+    word-spacing: 0px;
+    writing-mode: horizontal-tb;
+    -webkit-rtl-ordering: logical;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    text-transform: none;
+    width: 100%;
+    cursor: text;
+    display: block;
+}
+
+    input:focus {
+        border: 1px solid #1C5985;
+    }
+
+    input:active {
+        border: 1px solid #1C5985;
+    }
+
+input1 {
+    appearance: auto;
+    background-color: rgb(255,255,255);
+    border-bottom-color: rgb(99,99,99);
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border-bottom-style: inset;
+    border-bottom-width: 1px;
+    border-image-outset: 0;
+    border-image-repeat: stretch;
+    border-image-slice: 100%;
+    border-image-source: none;
+    border-image-width: 1;
+    border-left-color: rgb(99,99,99);
+    border-left-style: inset;
+    border-left-width: 1px;
+    border-right-color: rgb(99,99,99);
+    border-right-style: inset;
+    border-right-width: 1px;
+    border-top-color: rgb(99,99,99);
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-top-style: inset;
+    border-top-width: 1px;
+    box-sizing: border-box;
+    color: rgb(0, 28, 74);
+    cursor: text;
+    display: block;
+    flex-direction: column;
+    font-family: "Futura Now Text",arial;
+    /* font-family: "Volta: Modern: Display" */
+    font-feature-settings: normal;
+    font-kerning: auto;
+    font-optical-sizing: auto;
+    font-size: 18px;
+    font-stretch: 100%;
+    font-style: normal;
+    font-weight: 400;
+    height: 54px;
+    letter-spacing: normal;
+    line-height: 24px;
+    margin-bottom: 16px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 0px;
+    padding-bottom: 14px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 14px;
+    text-align: start;
+    text-indent: 0px;
+    text-rendering: auto;
+    text-shadow: none;
+    text-size-adjust: 100%;
+    text-transform: none;
+    width: 100%;
+    word-spacing: 0px;
+    writing-mode: horizontal-tb;
+    -webkit-rtl-ordering: logical;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+li {
+    list-style-type: none;
+}
+
+label {
+    box-sizing: border-box;
+    color: #4d4d57; /*updated color value as per the style guide*/
+    cursor: default;
+    display: block;
+    font-family: "Futura Now Text",arial;
+    font-size: 16px;
+    font-weight: 500; /*font weight shold be medium*/
+    /* height: 24px; not required*/
+    letter-spacing: -0.2px;
+    /* line-height: 21.6px; */
+    margin-bottom: 8px; /*added margin bottom*/
+    text-align: start;
+    text-size-adjust: 100%;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+.helpLink {
+    display: none
+}
+
+p, legend, span {
+    box-sizing: border-box;
+    color: rgb(0, 28, 74);
+    display: block;
+    font-family: "Futura Now Text";
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: -0.2px;
+    line-height: 21.6px;
+    margin-block-end: 0px;
+    margin-block-start: 0px;
+    margin-bottom: 0px;
+    margin-inline-end: px;
+    margin-inline-start: 0px;
+    margin-top: 0px;
+    text-align: start;
+    text-size-adjust: 100%;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+legend {
+}
+/* Custom class Sep 16, 2024 */
+.email input {
+    margin: 0;
+}
+
+.verificationControlContent .buttons {
+    margin-bottom: 24px;
+}
+
+button {
+    margin: 0 16px 0 0 !important;
+}
+
+/* Feb 12, 2025 */
+
+html {
+    font-size: inherit !important;
+}
+
+.snd-navContainer {
+    width: 1136px;
+    border-bottom: 1px solid #9898a2;
+    margin-bottom: 48px;
+}
+
+    .snd-navContainer .nav-tabs {
+        width: fit-content;
+        margin: 0 auto;
+    }
+
+        .snd-navContainer .nav-tabs > li > a {
+            padding: 16px 24px;
+            font-size: 20px;
+            color: #001c4a;
+            margin: 0;
+            letter-spacing: -0.2px;
+            line-height: 120%;
+            border: none;
+        }
+
+        .snd-navContainer .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+            padding: 16px 24px;
+            color: #ffffff;
+            font-size: 20px;
+            background: #001c4a;
+            border: none;
+            line-height: 120%;
+            font-weight: 500;
+            letter-spacing: -0.5px;
+            height: auto;
+            border-radius: 4px 4px 0px 0px;
+        }
+
+        .snd-navContainer .nav-tabs > li > a:hover {
+            padding: 16px 24px;
+            color: #ffffff;
+            font-size: 20px;
+            background: #1c59b5;
+            border: none;
+            line-height: 120%;
+            font-weight: normal;
+            letter-spacing: -0.2px;
+            height: auto;
+            border-radius: 4px 4px 0px 0px;
+        }
+
+#emailVerificationControl_but_change_claims {
+    display: none !important;
+}
+/*#NovartisExchange {
+   float:left;
+}*/
+#lblSignup {
+    display: inline;
+}
+
+.pepageheader {
+}
+
+.footer {
+    background-color: #001c4a;
+    color: #fff;
+    padding: 16px 0px;
+    margin-top: 48px;
+}
+
+.footer-bottom {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+.footer-first {
+    float: left;
+    text-align: left;
+}
+
+.richtext p:last-child {
+    margin-bottom: 0;
+}
+
+.footer p {
+    margin-bottom: 0;
+    color: #fff;
+    display: block;
+    font-family: "Futura Now Text";
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: -0.2px;
+    line-height: 21.6px;
+    text-align: start;
+    text-size-adjust: 100%;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.footer span {
+    margin-bottom: 0;
+    color: #fff;
+    margin-bottom: 0;
+    color: #fff;
+    display: block;
+    font-family: "Futura Now Text";
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: -0.2px;
+    line-height: 21.6px;
+    text-align: start;
+    text-size-adjust: 100%;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.footer-bottom .anchor {
+    margin-right: 1.25rem;
+    text-align: left;
+    color: #fff;
+}
+
+.anchor.no-underline {
+    border: 0;
+}
+
+.footer-bottom .anchor {
+    font-style: normal;
+}
+
+.anchor.footer-text {
+    font-size: calc(var(--footer-text-size-lg) / 16* 1rem);
+    font-weight: var(--footer-text-weight-400);
+    line-height: calc(var(--footer-text-line-height-lg) / 100);
+}
+
+.footer-middle {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.footer a {
+    display: block;
+    color: var(--brand-secondary-color-one);
+    text-decoration: none;
+}
+
+.pwdwrapper, .consentwrapper {
+    width: 250px;
+    margin: 20px auto;
+    min-height: 30dvh;
+}

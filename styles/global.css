@@ -1,0 +1,102 @@
+/*  HCP global css    */
+
+@font-face {
+    font-family: VoltaModernDisplay-75;
+    src: local(VoltaModernDisplay-75Bold), url("../../Fonts/VoltaModern/VoltaModernDisplay-75Bold.otf") format("opentype");
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+}
+
+@font-face {
+    font-family: VoltaModernDisplay-55Roman;
+    src: local(VoltaModernDisplay-55Roman), url("../../Fonts/VoltaModern/VoltaModernDisplay-55Roman.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+}
+
+@font-face {
+    font-family: VoltaModernDisplay-65;
+    src: local(VoltaModernDisplay-65Medium), url("../../Fonts/VoltaModern/VoltaModernDisplay-65Medium.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+}
+
+
+html {
+    background: none;
+}
+
+body {
+    /*background-color: rgb(255,255,255);*/
+    /* margin: 0px 135px 0px 135px; */
+    margin: 0% 0% 0% 0%;
+    text-align: left;
+    /*font-family: 'Volta-Roman';*/
+}
+
+.backdrop {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1040;
+    background-color: #000;
+    opacity: .5;
+}
+/* header style  */
+.brand-logo {
+    width: 168px;
+    height: 45px;
+    margin-top: 20px;
+    margin-left: 7px;
+    ;
+}
+
+#sub_header {
+    /* background-image: url("../images/pattern_mobile_2021-11-02/pattern-mobile.png");  */
+    background-image: url("../images/pattern_mobile_2021-11-02/pattern-mobile.png");
+    background-color: #fffefe;
+    height: 44px;
+    background-position: left;
+    background-repeat: repeat;
+    /* background-size: cover;  */
+    /* box-shadow: 0px -6px 26px rgb(0 0 0 / 10%); */
+    /* border-radius: 1px 0 3px 4px; */
+}
+
+#brand-logo-link {
+    margin-top: 19px;
+}
+
+#header_shadow {
+    height: 1px;
+    box-shadow: 0px 6px 5px rgb(0 0 0 / 50%);
+    z-index: 99 !important;
+    position: relative;
+}
+
+
+.progress-marker img {
+    margin: 0% 0% 4% 0%;
+}
+
+.show-process {
+    /* display: none; */
+    z-index: 9999;
+    background-color: white;
+    left: 50%;
+    position: fixed;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 315px;
+    padding: 10px;
+    border-radius: 4px;
+    color: #0460a9;
+    font-family: VoltaModernDisplay-55Roman;
+    font-size: 15px;
+}

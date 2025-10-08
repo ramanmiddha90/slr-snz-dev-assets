@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Email Verification — SANDOZ</title>
+    <link rel="stylesheet" href="https://solar-sandozid-assets.pages.dev/styles/main_v2.css" data-preload="true">
+    <style>
+        :root {
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --muted: #E5E5EF;
+            --primary: #0C3F8C;
+            --accent: #e6eefc;
+            --input-border: #d1d5db;
+            --btn-bg: #d8dde3;
+            --grey-500: #4D4D57;
+            --grey-300: #9898A2;
+            --grey-200: #E5E5EF;
+            --grey-100: #F6F6FB;
+            --grey-400: #666770;
+            --white: #fff;
+            --blue: #1C59B5;
+            --primary-600: #001C4A;
+            --succes: #1A717A;
+            --alert: #CB862C;
+            --error: #C63736;
+            --light-error: #FDE4E4;
+        }
+
+        body {
+            margin: 0;
+            background: #F1ECE9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 72px;
+        }
+
+        /* top logo */
+        .logo {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .container {
+            width: 568px;
+            max-width: 95vw;
+            background: var(--card);
+            border-radius: 16px;
+            padding: 32px;
+            box-sizing: border-box;
+            position: relative;
+            text-align: center;
+        }
+
+        .brand {
+            margin-top: 60px;
+        }
+
+        .check {
+            margin: 56px auto;
+            display: grid;
+            place-items: center;
+        }
+
+        .check img {
+            width: 114px;
+            height: 114px;
+            display: block;
+        }
+
+        .title {
+            font-size: 24px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 120%;
+            letter-spacing: -0.2px;
+            color: var(--primary-600);
+        }
+
+        .desc {
+            text-align: center;
+            margin-top: 24px;
+            margin-bottom: 56px;
+            color: var(--grey-500);
+            font-size: 18px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 150%;
+            letter-spacing: -0.2px;
+        }
+
+        /* Mobile (max-width: 767px) */
+        @media (max-width: 767px) {
+            body {
+                padding-top: 56px;
+            }
+
+            .container {
+                width: 360px;
+                max-width: 90vw;
+            }
+
+            .title,
+            .desc {
+                font-size: 16px;
+
+            }
+        }
+
+        /* Tablet (768px to 1024px) */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            body {
+                padding-top: 72px;
+            }
+
+            .container {
+                width: 506px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" role="main" aria-live="polite">
+        <div class="brand"><img src="./objects/logo.svg" alt="sandoz logo" /></div>
+        <div class="check" aria-hidden="true">
+            <img src="./objects/success.svg" alt="sandoz logo" />
+        </div>
+
+        <h1 class="title">Congratulations!</h1>
+        <p class="desc">
+            Your account creation request has successfully submitted for approval.
+            Please check your email for confirmation.
+        </p>
+</body>
+
+</html>

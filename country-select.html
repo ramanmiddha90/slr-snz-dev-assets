@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://solar-sandozid-assets.pages.dev/styles/main_v2.css" data-preload="true" />
+    <style type="text/css">
+        :root {
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --muted: #E5E5EF;
+            --primary: #0C3F8C;
+            --accent: #e6eefc;
+            --input-border: #d1d5db;
+            --btn-bg: #d8dde3;
+            --grey-500: #4D4D57;
+            --grey-300: #9898A2;
+            --grey-200: #E5E5EF;
+            --grey-100: #F6F6FB;
+            --grey-400: #666770;
+            --white: #fff;
+            --blue: #1C59B5;
+            --primary-600: #001C4A;
+            --succes: #1A717A;
+            --alert: #CB862C;
+            --error: #C63736;
+            --light-error: #FDE4E4;
+        }
+
+        body {
+            margin: 0;
+            background: #F1ECE9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 72px;
+            font-feature-settings: 'liga' off, 'clig' off !important;
+        }
+
+        /* top logo */
+        .logo {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .container {
+            width: 568px;
+            max-width: 95vw;
+            background: var(--card);
+            border-radius: 16px;
+            padding: 32px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            border-radius: 22px;
+            border: 0 !important;
+            font-weight: 500;
+            font-size: 16px;
+            padding: 12px 24px;
+            margin-bottom: 25px !important;
+            margin-top: 32px !important;
+        }
+
+        .btn.primary {
+            background: var(--blue);
+            color: var(--white);
+        }
+
+        .disabled {
+            cursor: not-allowed;
+            color: var(--grey-300);
+            background-color: var(--grey-200);
+        }
+
+
+        .btn[disabled] {
+            cursor: not-allowed;
+            color: var(--grey-300);
+            background-color: var(--grey-200);
+        }
+
+        .required {
+            color: var(--error);
+            display: inline;
+            font-size: 16px;
+        }
+
+        .input-with-icon:hover {
+            opacity: 0.7;
+        }
+
+        .container-heading {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1px;
+            margin: 48px auto;
+        }
+
+        p {
+            color: var(--grey-500);
+            text-align: center;
+            font-size: 18px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 150%;
+            letter-spacing: -0.2px;
+        }
+
+        label {
+            color: var(--grey-500);
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 120%;
+            letter-spacing: -0.2px;
+            display: inline-flex;
+            text-align: left;
+            font-size: 14px;
+            margin-bottom: 5px;
+            gap: 4px;
+        }
+
+        .required-field {
+            color: #C63736;
+        }
+
+        button {
+            background-color: var(--blue);
+            color: #ffff;
+            padding: 10px;
+            width: 100%;
+            border-radius: 25px;
+            font-family: Futura Now Text;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            background-color: #dfdcdc;
+            color: #666770;
+            cursor: not-allowed;
+        }
+
+        .backdrop {
+            position: unset !important;
+        }
+
+        .dropdown-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .dropdown {
+            position: relative;
+            background: var(--white);
+            color: #fff;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            border: 1px solid var(--grey-300);
+        }
+
+        .dropdown span {
+            color: var(--grey-500);
+        }
+
+        .dropdown.selected span {
+            color: var(--primary-600);
+        }
+
+        .dropdown img {
+            width: 22px;
+            height: 22px;
+            padding-top: 4px
+        }
+
+        .dropdown.open {
+            background: var(--primary-600);
+            color: #fff !important;
+        }
+
+        .dropdown.open span {
+            color: #fff !important;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 110%;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border: 1px solid var(--grey-300);
+            border-radius: 8px;
+            box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+
+        }
+
+        .dropdown-options {
+            overflow-y: auto;
+            max-height: 240px;
+        }
+
+        /* Scrollbar */
+        .dropdown-options::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .dropdown-options::-webkit-scrollbar-thumb {
+            background: var(--blue);
+            border-radius: 8px;
+        }
+
+        .dropdown-options::-webkit-scrollbar-track {
+            background: var(--grey-200);
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            padding: 8px 8px 0px 8px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--grey-300);
+            border-radius: 8px;
+            outline: none;
+            font-size: 18px;
+        }
+
+        .search-box img {
+            position: absolute;
+            right: 20px;
+            top: 45%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+        }
+
+
+        .dropdown-item {
+            padding: 8px 16px;
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 14px;
+            color: var(--grey-500);
+            border-bottom: 1px solid var(--grey-200);
+            margin: auto 14px;
+        }
+
+        .dropdown-item:hover {
+            background: #f0f4ff;
+        }
+
+        .show {
+            display: block;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 500;
+            color: var(--primary-600);
+        }
+
+        @media (max-width:420px) {
+            .container {
+                padding: 20px
+            }
+
+            .logo {
+                font-size: 30px
+            }
+        }
+
+        /* Mobile (max-width: 767px) */
+        @media (max-width: 767px) {
+            body {
+                padding-top: 56px;
+            }
+
+            .container {
+                width: 360px;
+                max-width: 95vw;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            p {
+                font-size: 16px;
+            }
+
+            .search-box input {
+                font-size: 16px;
+            }
+
+        }
+
+        /* Tablet (768px to 1024px) */
+        @media (min-width: 768px) and (max-width: 1024px) {
+
+            body {
+                padding-top: 72px;
+            }
+
+            .container {
+                width: 506px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            p {
+                font-size: 16px;
+            }
+
+            .search-box input {
+                font-size: 16px;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" role="main">
+        <div class="logo"><img src="./objects/logo.svg" alt=""></div>
+        <div class="body-container">
+            <div class="icon">
+                <img src="./objects/location.svg" alt="Location icon" />
+                <img src="./objects/location-down.svg" alt="Ellipse icon" />
+            </div>
+            <div class="container-heading">
+                <h2>Choose your Country</h2>
+                <p tabindex="0">Please select your country to help us to give you a better user experience.</p>
+            </div>
+
+            <div class="field">
+                <label for="country">Country <span class="required">*</span></label>
+                <div class="dropdown-container">
+                    <div class="dropdown" onclick="toggleDropdown()" tabindex="0">
+                        <span id="selectedText">Select your country</span>
+                        <div style="width: 24px; height: 24px;">
+                            <img id="dropdownIcon" src="./objects/arrow-down.svg" alt="open dropdown icon"
+                                class="arrow-down" tabindex="0"></i>
+                        </div>
+                    </div>
+                    <div class="dropdown-content" id="dropdownList">
+                        <div class="search-box">
+                            <input type="text" id="searchInput" placeholder="Search Country" onkeyup="filterItems()">
+                            <img src="./objects/search.svg" class="search-icon" alt="search icon"></i>
+                        </div>
+                        <div class="dropdown-options">
+                            <div class="dropdown-item" role="option" tabindex="0">Germany</div>
+                            <div class="dropdown-item" role="option" tabindex="0">Ghana</div>
+                            <div class="dropdown-item" role="option" tabindex="0">Greece</div>
+                            <div class="dropdown-item" role="option" tabindex="0">Grenada</div>
+                            <div class="dropdown-item" role="option" tabindex="0">India</div>
+                            <div class="dropdown-item" role="option" tabindex="0">United States</div>
+                            <div class="dropdown-item" role="option" tabindex="0">United Kingdom</div>
+                            <div class="dropdown-item" role="option" tabindex="0">Canada</div>
+                            <div class="dropdown-item" role="option" tabindex="0">France</div>
+                            <div class="dropdown-item" role="option" tabindex="0">Spain</div>
+                            <div class="dropdown-item" role="option" tabindex="0">Italy</div>
+                            <div class="dropdown-item" role="option" tabindex="0">Australia</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <button type="button" id="continueBtn" class="btn primary" disabled>continue</button>
+
+        </div>
+    </div>
+    <form id="loaderform">
+    </form>
+
+    <script>
+        // Cache DOM elements
+        const dropdown = document.querySelector(".dropdown");
+        const dropdownList = document.getElementById("dropdownList");
+        const dropdownIcon = document.getElementById("dropdownIcon");
+        const selectedText = document.getElementById("selectedText");
+        const searchInput = document.getElementById("searchInput");
+        const dropdownItems = document.querySelectorAll(".dropdown-item");
+        const continueBtn = document.getElementById("continueBtn");
+
+        let selected = null;
+
+        // Toggle dropdown visibility
+        function toggleDropdown() {
+            dropdown.classList.toggle("open");
+            dropdownList.classList.toggle("show");
+            updateDropdownIcon();
+        }
+
+        // Update dropdown icon based on state
+        function updateDropdownIcon() {
+            if (dropdown.classList.contains("open")) {
+                dropdownIcon.src = "./objects/arrow-up.svg";
+            } else {
+                dropdownIcon.src = "./objects/arrow-down.svg";
+            }
+        }
+
+        // Filter dropdown items based on input
+        function filterItems() {
+            const input = searchInput.value.toLowerCase();
+            dropdownItems.forEach(item => {
+                item.style.display = item.textContent.toLowerCase().includes(input) ? "" : "none";
+            });
+        }
+
+        // Handle item selection
+        dropdownItems.forEach(item => {
+            item.addEventListener("click", () => {
+                selectedText.innerText = item.textContent;
+                dropdown.classList.remove("open");
+                dropdownList.classList.remove("show");
+                updateDropdownIcon();
+                continueBtn.disabled = false;
+                dropdown.classList.add("selected")
+            });
+        });
+
+        // Close dropdown when clicking outside
+        window.addEventListener("click", event => {
+            if (!event.target.closest(".dropdown-container")) {
+                dropdown.classList.remove("open");
+                dropdownList.classList.remove("show");
+                updateDropdownIcon();
+            }
+        });
+    </script>
+
+</body>
+
+</html>

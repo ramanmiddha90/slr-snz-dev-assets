@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<!-- saved from url=(0036)https://dimkoig1.github.io/form.html -->
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://solar-sandozid-assets.pages.dev/styles/main_v2.css" data-preload="true">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <style type="text/css">
+        #cancel {
+            display: none;
+        }
+    </style>
+
+
+    <script>
+
+        (function onPageReady() {
+            var intervalHandle = setInterval(
+                function () {
+                    if (window.pageReady) {
+
+                        function GetParameterValues(param) {
+                            var url = document.referrer.slice(window.location.href.indexOf('?') + 1).split('&');
+                            for (var i = 0; i < url.length; i++) {
+                                var urlparam = url[i].split('=');
+                                if (urlparam[0].toUpperCase() == param.toUpperCase()) {
+                                    return urlparam[1];
+                                }
+
+                            }
+                            return null;
+                        };
+
+                        var continuteButton = document.getElementById('continue');
+                        if (continuteButton && $("#continue").is(':visible')) {
+
+                            if ($("#customCancel") && $("#customCancel").is(':visible')) {
+                                $("#customCancel").remove();
+                            }
+                        
+                            $("#continue").after("<button id='customCancel'>Cancel</button>");
+                            $("#customCancel").click(function () {
+                                debugger;
+                               
+                                var returnUrl = GetParameterValues('return_url'); //Encoded value FE URL
+                                if (returnUrl == null) 
+                                    returnUrl = "";
+                                var redirectURI = GetParameterValues('redirect_uri');
+                                var url = decodeURIComponent(redirectURI) + "#error=access_denied&error_description=AAD_Custom_466:" + returnUrl;
+                                window.location.replace(url);
+                               
+
+                            });
+                            clearInterval(intervalHandle);
+                        }
+                    }
+                }, 50);
+        }());
+    </script>
+</head>
+<body>
+    <div class="wrapper">
+        <img id="logo" src="https://ramanmiddha90.github.io/ADSolarAsests/objects/sandoz-logo_6.svg" alt="Sandoz Logo" style="display:none;">
+        <div id="form">
+            <div id="api" data-name="SelfAsserted" style="display: none;">
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
