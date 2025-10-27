@@ -41,7 +41,7 @@
                
                 function setDot(node, ok) {
 
-                    node.src = ok ? './objects/success.svg' : './objects/failed.svg';
+                    node.src = ok ? 'https://slr-snz-dev-assets.pages.dev/objects/success.svg' : 'https://slr-snz-dev-assets.pages.dev/objects/failed.svg';
                     node.alt = ok ? 'check-mark' : 'cross-mark'
 
                 }
