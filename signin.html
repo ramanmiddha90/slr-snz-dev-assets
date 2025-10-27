@@ -611,41 +611,23 @@
             }
         }
     </style>
-    <!--<script src="https://adb2c-ui-uat.pages.dev/Scripts/signin.js"></script>-->
-    <!--<script src="https://solar-sandozid-assets.pages.dev/Scripts/signin.js"></script>-->
-    <script src="https://slr-snz-assets.pages.dev/Scripts/signin.js" defer></script>
+  
+    <script src="https://slr-snz-dev-assets.pages.dev/Scripts/signin.js" defer></script>
 </head>
 <body>
-    <div class="wrapper">
-        <img id="logo" src="https://ramanmiddha90.github.io/ADSolarAsests/objects/sandoz-logo_6.svg" alt="Sandoz Logo" style="display:none;">
-        <div id="form">
-            <div id="api" data-name="SelfAsserted" style="display: none;">
-            </div>
-            <div class="claims-provider-list-buttons social socialIdps" role="form">
-                <div class="intro">
-                    <p id="ssointro" aria-level="1">Are you a Sandoz associate?</p>
-                </div>
-                <div class="options">
-
-                    <div>
-                        <button class="accountButton claims-provider-selection" id="SNZ_LOGIN" role="link">Sandoz</button>
-                        <button class="accountButton claims-provider-selection" id="SWISSRX_LOGIN" style="display:none" role="link">SwissRX</button>
-                    </div>
-                </div>
-            </div>
-            <div class="claims-provider-list-buttons social .signuplink" role="form">
-                <div class="intro">
-                    <div style="margin-top:16px;font-size:18px">
-                        <span id="lblSignup" aria-level="1">Not having a Novartis account yet? </span>
-                        <a id="signup" href='javascript:undefined'>Sign up now!</a>
-                    </div>
-                </div>
-            </div>
-
+    <div class="container" role="main">
+        <div class="logo"><img src="https://slr-snz-assets.pages.dev/objects/logo.svg" alt=""></div>
+      
+        <div id="api" data-name="SelfAsserted" style="display: none;">
         </div>
-    </div>
-    <div id="loader-backdrop">
-        <div class="loader"></div>
+        <div class="claims-provider-list-buttons social .signuplink" role="form">
+            <div class="intro">
+                <div style="margin-top:16px;font-size:18px">
+                    <span id="lblSignup" aria-level="1">Not having a Sandoz account yet? </span>
+                    <a id="signup" href='javascript:undefined'>Sign up now!</a>
+                </div>
+            </div>
+        </div>
     </div>
 
 </body>
