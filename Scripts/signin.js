@@ -20,7 +20,8 @@
                     var observer = new MutationObserver(function () {
                         if (targetNode.style.display != 'none') {
                             //debugger;
-                         /*   console.log("claimVerificationServerError");*/
+                            /*   console.log("claimVerificationServerError");*/
+                            LoadSpinner(false);
                             if ($("#claimVerificationServerError").text().includes("username or password provided")) {
                                
                                 $("#claimVerificationServerError").text(GetTranslationBasedOnCode("S-001"));
@@ -42,7 +43,14 @@
                     });
                     observer.observe(targetNode, { attributes: true, attributeFilter: ['style'] });
                 };
-
+                function LoadSpinner(showLoader) {
+                    if (showLoader == true) {
+                        document.getElementById('loader-backdrop').style.display = 'flex';
+                    }
+                    else {
+                        document.getElementById('loader-backdrop').style.display = 'none';
+                    }
+                }
                 function SetUILabels() {
                     try {
                         if ($("#ErrorMappings") != null) {
@@ -190,6 +198,26 @@
 
                     }
                 }
+                function hasMicrosoftValidationErrors() {
+                    // Select all potential error containers
+                    const errorElements = document.querySelectorAll('.error.itemLevel, .error.pageLevel, #alert');
+
+                    for (const el of errorElements) {
+                        if (el.offsetParent !== null && el.offsetHeight > 0) {
+                            return true; // Error is actually visible
+                        }
+                    }
+                    return false; // No visible errors
+                }
+
+                document.getElementById("continue").addEventListener("click", function (event) {
+                    // Delay a moment to allow B2C to apply error classes
+                    setTimeout(() => {
+                        if (!hasMicrosoftValidationErrors()) {
+                            LoadSpinner(true);
+                        }
+                    }, 400); // slight delay so DOM updates
+                });
                 var setCustomLabels = function () {
                     if ($("#api"))
                         $("#api > .intro:eq(0) ").before("<div class='pageheader intropageheader intro'><p id='intropageheader_lbl'>Login</p></div>");
