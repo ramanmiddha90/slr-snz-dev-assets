@@ -108,7 +108,7 @@
                         container.appendChild(toggleBtn);
                     }
                     pwdInput.addEventListener('input', () => {
-                        validatePasswordRules(password.value);
+                        validatePasswordRules(pwdInput.value);
                     });
                 }
                 function GetRedirectURLFromReferrer(param) {
