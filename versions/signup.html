@@ -714,8 +714,8 @@
     <div class="container" role="main">
         <div class="logo"><img src="https://slr-snz-assets.pages.dev/objects/logo.svg" alt=""></div>
         <!-- <div class="country-lang"><img src="https://slr-snz-assets.pages.dev/objects/functional-globe.svg"
-                alt="globe icon"><span class="co-lan">
-                English</span></div> -->
+            alt="globe icon"><span class="co-lan">
+            English</span></div> -->
         <div class="header-container">
             <!-- <img src="https://slr-snz-assets.pages.dev/objects/arrow-left.svg" alt="back arrow"> -->
             <h1 class="header">Verify your Email 1/3</h1>
@@ -730,15 +730,35 @@
         </div>
 
         <!-- <p class="lead">Enter valid email address to send verification code to proceed with registration.</p> -->
-        <!-- 
-        <form id="verifyForm" onsubmit="return false;">
-             <div>
-                <div id="api" data-name="SelfAsserted" style="display: none;">
-                </div>
+        <!--
+    <form id="verifyForm" onsubmit="return false;">
+         <div>
+            <div id="api" data-name="SelfAsserted" style="display: none;">
             </div>
-        </form> -->
+        </div>
+    </form> -->
         <div id="api" data-name="SelfAsserted" style="display: none;">
         </div>
+        <div class="passwordStrength" style="display:none">
+            <!-- Password Strength Bar -->
+            <div class="strength-bar">
+                <div class="strength-fill" id="strength-fill"></div>
+            </div>
+            <ul class="requirements" id="rules">
+                <li>
+                    <span class="check"><img id="rule-length" src="./objects/check-mark.svg" alt="check-mark"></span> 8
+                    to 16 characters
+                </li>
+                <li>
+                    <span class="check"><img id="rule-number" src="./objects/check-mark.svg" alt="check-mark"></span> A
+                    number
+                </li>
+                <li>
+                    <span class="check"><img id="rule-special" src="./objects/check-mark.svg" alt="check-mark"></span> A
+                    special character
+                </li>
+            </ul>
+        </div>s
     </div>
 
 </body>
