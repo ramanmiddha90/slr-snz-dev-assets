@@ -38,6 +38,51 @@
                     }
                     return null;
                 };
+               
+                function setDot(node, ok) {
+
+                    node.src = ok ? './objects/success.svg' : './objects/failed.svg';
+                    node.alt = ok ? 'check-mark' : 'cross-mark'
+
+                }
+                function validatePasswordRules(pwd) {
+                    let strength = 0;
+                    let check = false;
+
+                    const lenOk = pwd.length >= 8 && pwd.length <= 16;
+                    if (lenOk) {
+                        strength += 1
+                    }
+                    const numOk = /[0-9]/.test(pwd);
+                    if (numOk) {
+                        strength += 1
+
+                    }
+                    const specialOk = /[!@#$%^&*()_\-+={}[\]|\\:;"'<>,.?/~`]/.test(pwd);
+                    if (specialOk) {
+                        strength += 1
+                    }
+
+                    let width = (strength / 3) * 100;
+                    strengthFill.style.width = width + "%";
+
+                    if (width == 0 && pwd.length) {
+                        strengthFill.style.width = 10 + "%";
+                        strengthFill.style.background = "#4D4D57";
+                    }
+                    if (width > 33 && width <= 50) {
+                        strengthFill.style.background = "#C63736";
+                    } else if (width < 75 && width > 50) {
+                        strengthFill.style.background = "#CB862C";
+                    } else if (width >= 75) {
+                        strengthFill.style.background = "#1A717A";
+                    }
+
+                    setDot(ruleLength, lenOk);
+                    setDot(ruleNumber, numOk);
+                    setDot(ruleSpecial, specialOk);
+                    return lenOk && numOk && specialOk;
+                }
                 function addPasswordToggle() {
                     const pwdInput = document.getElementById("newPassword");
 
@@ -62,6 +107,9 @@
                         };
                         container.appendChild(toggleBtn);
                     }
+                    pwdInput.addEventListener('input', () => {
+                        validatePasswordRules(password.value);
+                    });
                 }
                 function GetRedirectURLFromReferrer(param) {
                     var url = document.referrer.slice(document.referrer.indexOf('?') + 1).split('&');
