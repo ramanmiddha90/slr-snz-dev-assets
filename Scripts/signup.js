@@ -46,6 +46,10 @@
 
                 }
                 function validatePasswordRules(pwd) {
+                    const strengthFill = document.getElementById('strength-fill');
+                    const ruleLength = document.getElementById('rule-length');
+                    const ruleNumber = document.getElementById('rule-number');
+                    const ruleSpecial = document.getElementById('rule-special');
                     let strength = 0;
                     let check = false;
 
