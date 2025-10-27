@@ -3,29 +3,6 @@
         function () {
             if (window.pageReady) {
 
-                const observer = new MutationObserver(() => {
-                    const dropdown = document.querySelector("select[aria-label='Country']");
-                    // $("#country").addClass("form-control");
-                    // if (dropdown && !dropdown.classList.contains("select2-hidden-accessible")) {
-                    //     // $(dropdown).select2({
-
-
-                    //     //     theme: "bootstrap"
-                    //     // });
-                    // }
-                    //   new SlimSelect({
-                    //         select: '#country',
-                    //         placeholder: 'Search country…'
-                    //     })
-                    // const element = document.getElementById('country');
-                    //         const choices = new Choices(element, {
-                    //             searchEnabled: true,
-                    //             placeholderValue: 'Search country…',
-                    //             itemSelectText: '',
-                    //         });
-                });
-
-                observer.observe(document.getElementById("api"), { childList: true, subtree: true });
 
                 function GetParameterValues(param) {
                     var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
@@ -126,10 +103,7 @@
                     }
                     return null;
                 }
-                function GetQueryParamValue() {
-                    var queryparams = JSON.parse($("#queryparams").val());
-                    countryCode = queryparams.countryCode;
-                }
+              
                 function LoadCountries(countries, countryCode) {
                     const dropdown = document.getElementById("country");
 
