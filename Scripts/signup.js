@@ -99,6 +99,8 @@
                     }
                     if(currentStep==1){
                         addPasswordToggle();
+                        $(".passwordStrength").show();
+                        $(".passwordStrength").appendTo(".newPassword_li")
                     }
                     if (currentStep == 2) {
                         $(".header").text("Profile Information 2/3")
