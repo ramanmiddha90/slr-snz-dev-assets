@@ -198,21 +198,6 @@
                             var fieldId = UXField.name;
                             var fieldAttr = "." + fieldId + "_li";
                             var fieldAttrLabelId = "#" + fieldId + "_label";
-
-                            if (fieldId == "country") {
-                                 LoadCountries(formConfig.countries);
-                                  document.getElementById('country').value =queryparams.countryCode;
-                                if (hasCountrCode) {
-                                    UXField.visible = false;
-                                    UXField.required = false;
-
-                                }
-                                else {
-
-                                    UXField.visible = true;
-                                    UXField.required = true;
-                                }
-                            }
                             if (UXField.visible) {
 
                                 if (UXField.required) {

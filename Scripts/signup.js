@@ -15,7 +15,7 @@
                     }
                     return null;
                 };
-               
+
                 function setDot(node, ok) {
 
                     node.src = ok ? 'https://slr-snz-dev-assets.pages.dev/objects/success.svg' : 'https://slr-snz-dev-assets.pages.dev/objects/failed.svg';
@@ -103,7 +103,7 @@
                     }
                     return null;
                 }
-              
+
                 function LoadCountries(countries, countryCode) {
                     const dropdown = document.getElementById("country");
 
@@ -117,13 +117,13 @@
                     }
                 }
                 function SetHeader(currentStep) {
-                    if (currentStep == -1) {
+                    if (currentStep == 0) {
                         $(".header").text("Choose your country!");
                         $(".dots span:nth-of-type(1)").removeClass("active");
                         $(".dots span:nth-of-type(2)").removeClass("active");
                         $(".dots span:nth-of-type(3)").removeClass("active");
                     }
-                    if(currentStep==1){
+                    if (currentStep == 1) {
                         addPasswordToggle();
                         $(".passwordStrength").show();
                         $(".passwordStrength").appendTo(".newPassword_li")
@@ -186,11 +186,11 @@
 
                         var hasCountrCode = queryparams.countryCode != undefined && queryparams.countryCode != "" && queryparams.countryCode != "{OAUTH-KV:cc}";
                         var formConfig = $.parseJSON($("#FormConfig").val());
-                        if (currentStepVal == -1) {
+                        if (currentStepVal == 0) {
                             LoadCountries(formConfig.countries);
                             return;
                         }
-                        var currentStep = currentStepVal - 2;
+                        var currentStep = currentStepVal;
                         if (currentStepVal == 1) {
                             CheckFormConfiguraiton(queryparams, formConfig);
                         }
@@ -198,21 +198,6 @@
                             var fieldId = UXField.name;
                             var fieldAttr = "." + fieldId + "_li";
                             var fieldAttrLabelId = "#" + fieldId + "_label";
-
-                            if (fieldId == "country") {
-                                 LoadCountries(formConfig.countries);
-                                  document.getElementById('country').value =queryparams.countryCode;
-                                if (hasCountrCode) {
-                                    UXField.visible = false;
-                                    UXField.required = false;
-
-                                }
-                                else {
-
-                                    UXField.visible = true;
-                                    UXField.required = true;
-                                }
-                            }
                             if (UXField.visible) {
 
                                 if (UXField.required) {
