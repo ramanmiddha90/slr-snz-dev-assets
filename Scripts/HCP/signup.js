@@ -198,7 +198,7 @@
                             var fieldAttrLabelId = "#" + fieldId + "_label";
                             if (UXField.type = "custom") {
                                 if (UXField.text != null) {
-                                    $("#" + UXField.Name).text(UXField.text);
+                                    $("#" + UXField.name).text(UXField.text);
                                 }
                             }
                             else {
