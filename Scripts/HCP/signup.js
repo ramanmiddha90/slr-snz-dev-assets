@@ -194,7 +194,7 @@
                             var fieldId = UXField.name;
                             var fieldAttr = "." + fieldId + "_li";
                             var fieldAttrLabelId = "#" + fieldId + "_label";
-                            if (UXField.fieldType = "custom" && UXField.visible) {
+                            if (UXField.fieldType == "custom" && UXField.visible) {
                                 if (UXField.text != null) {
                                     $("#" + UXField.name).text(UXField.text);
                                 }
