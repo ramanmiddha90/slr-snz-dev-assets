@@ -185,7 +185,7 @@
                         var formConfig = $.parseJSON($("#FormConfig").val());
                         if (currentStepVal == 0) {
                             LoadCountries(formConfig.countries);
-                            return;
+                           
                         }
                         var currentStep = currentStepVal;
                         if (currentStepVal == 1) {
