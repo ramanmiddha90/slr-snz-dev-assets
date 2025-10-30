@@ -15,7 +15,7 @@
                     }
                     return null;
                 };
-               
+
                 function setDot(node, ok) {
 
                     node.src = ok ? 'https://slr-snz-dev-assets.pages.dev/objects/success.svg' : 'https://slr-snz-dev-assets.pages.dev/objects/failed.svg';
@@ -103,7 +103,7 @@
                     }
                     return null;
                 }
-              
+
                 function LoadCountries(countries, countryCode) {
                     const dropdown = document.getElementById("country");
 
@@ -123,7 +123,7 @@
                         $(".dots span:nth-of-type(2)").removeClass("active");
                         $(".dots span:nth-of-type(3)").removeClass("active");
                     }
-                    if(currentStep==1){
+                    if (currentStep == 1) {
                         addPasswordToggle();
                         $(".passwordStrength").show();
                         $(".passwordStrength").appendTo(".newPassword_li")
@@ -181,10 +181,7 @@
                     try {
                         var queryparams = JSON.parse($("#queryparams").val());
                         var currentStepVal = $("#currentStep").val();
-                        var countryCode = queryparams.countryCode;
                         SetHeader(currentStepVal);
-
-                        var hasCountrCode = queryparams.countryCode != undefined && queryparams.countryCode != "" && queryparams.countryCode != "{OAUTH-KV:cc}";
                         var formConfig = $.parseJSON($("#FormConfig").val());
                         if (currentStepVal == 0) {
                             LoadCountries(formConfig.countries);
@@ -195,56 +192,59 @@
                             CheckFormConfiguraiton(queryparams, formConfig);
                         }
                         formConfig.steps[currentStep].fields.forEach(function (UXField) {
+
                             var fieldId = UXField.name;
                             var fieldAttr = "." + fieldId + "_li";
                             var fieldAttrLabelId = "#" + fieldId + "_label";
-                            if (UXField.visible) {
-
-                                if (UXField.required) {
-                                    let objIndex = SA_FIELDS.AttributeFields.findIndex(
-                                        (obj) => obj.ID == fieldId
-                                    );
-                                    if (objIndex >= 0) {
-                                        //Update object's name property.
-                                        SA_FIELDS.AttributeFields[objIndex].IS_REQ = true;
-                                        $(fieldAttrLabelId).text($(fieldAttrLabelId).text() + "*");
-                                    }
-                                }
-                                else {
-                                    $(fieldAttr).show();
-
-                                }
-                                if (UXField.content != undefined && UXField.content.value != undefined) {
-                                    var path = atob(UXField.content.path);
-                                    $(path).html(decodeURIComponent(escape(atob(UXField.content.value))));
-                                }
-                                if (UXField.type == "dropdown" && UXField.options != undefined) {
-                                    $("select#" + UXField.name).find('option:not(:first)').remove();
-                                    const sorted = UXField.options.sort((a, b) => a.key.localeCompare(b.key));
-
-                                    // Add a placeholder option
-                                    // Populate dropdown with sorted items
-                                    $.each(sorted, function (index, item) {
-                                        $("select#" + UXField.name).append(
-                                            $("<option></option>")
-                                                .attr("value", item.value)  // submitted value
-                                                .text(item.key)             // display text
-                                        );
-                                    });
-                                    // //console.log(options);
-                                    // $.each(options, function (value, key) {
-
-                                    //     $("select#" + UXField.Id).append(
-                                    //         $('<option></option>').val(value).text(key)
-                                    //     );
-                                    //     console.log("key:" + key + "Value:" + value);
-                                    // });
-                                    if (UXField.SelectedIndex != undefined)
-                                        $("select#" + UXField.Id).find('option:eq(' + UXField.SelectedIndex + ')').attr('selected', 'selected');
+                            if (UXField.type = "custom") {
+                                if (UXField.text != null) {
+                                    $("#" + UXField.Name).text(UXField.text);
                                 }
                             }
                             else {
-                                $(fieldAttr).hide();
+                                if (UXField.visible) {
+
+                                    if (UXField.required) {
+                                        let objIndex = SA_FIELDS.AttributeFields.findIndex(
+                                            (obj) => obj.ID == fieldId
+                                        );
+                                        if (objIndex >= 0) {
+                                            //Update object's name property.
+                                            SA_FIELDS.AttributeFields[objIndex].IS_REQ = true;
+                                            $(fieldAttrLabelId).text($(fieldAttrLabelId).text() + "*");
+                                        }
+                                    }
+                                    else {
+                                        $(fieldAttr).show();
+
+                                    }
+                                    ///switch case based on type of fields
+                                    if (UXField.content != undefined && UXField.content.value != undefined) {
+                                        var path = atob(UXField.content.path);
+                                        $(path).html(decodeURIComponent(escape(atob(UXField.content.value))));
+                                    }
+
+                                    if (UXField.type == "dropdown" && UXField.options != undefined) {
+                                        $("select#" + UXField.name).find('option:not(:first)').remove();
+                                        const sorted = UXField.options.sort((a, b) => a.key.localeCompare(b.key));
+
+                                        // Add a placeholder option
+                                        // Populate dropdown with sorted items
+                                        $.each(sorted, function (index, item) {
+                                            $("select#" + UXField.name).append(
+                                                $("<option></option>")
+                                                    .attr("value", item.value)  // submitted value
+                                                    .text(item.key)             // display text
+                                            );
+                                        });
+
+                                        if (UXField.SelectedIndex != undefined)
+                                            $("select#" + UXField.Id).find('option:eq(' + UXField.SelectedIndex + ')').attr('selected', 'selected');
+                                    }
+                                }
+                                else {
+                                    $(fieldAttr).hide();
+                                }
                             }
 
                         });
