@@ -180,15 +180,13 @@
                 function LoadFields() {
                     try {
                         var queryparams = JSON.parse($("#queryparams").val());
-                        var currentStepVal = $("#currentStep").val();
-                        SetHeader(currentStepVal);
+                        var currentStep = $("#currentStep").val();
+                        SetHeader(currentStep);
                         var formConfig = $.parseJSON($("#FormConfig").val());
-                        if (currentStepVal == 0) {
+                        if (currentStep == 0) {
                             LoadCountries(formConfig.countries);
-                           
                         }
-                        var currentStep = currentStepVal;
-                        if (currentStepVal == 1) {
+                        if (currentStep == 1) {
                             CheckFormConfiguraiton(queryparams, formConfig);
                         }
                         formConfig.steps[currentStep].fields.forEach(function (UXField) {
