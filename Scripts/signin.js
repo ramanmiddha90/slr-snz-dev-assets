@@ -6,6 +6,8 @@
                 var policyPrefix = "B2C_1A_SLR_SNZ";
                 var SNZPolicy = "SNZ_LOGIN";
                 var SwissRXPolicy = "SWISSRX_LOGIN";
+                var PassResetPolicy = "PASSRESET";
+                var SignUpPolicy = "SIGNUP";
                 var HandleSpinnerEvents = function () {
                     var targetNode = document.getElementById('claimVerificationServerError');
                     //debugger;
@@ -97,6 +99,7 @@
 
                 }
                 var BindEvent = function () {
+                    HandleSpinnerEvents();
                     $("#SNZ_LOGIN").click(function (event) {
                         var policyName = policyPrefix + "_" + SNZPolicy;
                         var queryparams = new URLSearchParams(window.location.search);
@@ -110,11 +113,13 @@
                         window.location.search = queryparams.toString();
                     });
                     $("#resetPassword").click(function (event) {
-                        window.location = ConfigureRedirectURL("B2C_1A_SOLAR_Prod_PWRESET");
+                        var passResetPolicy = policyPrefix + "_" + PassResetPolicy;
+                        window.location = ConfigureRedirectURL(passResetPolicy);
                     });
 
                     $("#signup").click(function (event) {
-                        window.location = ConfigureRedirectURL("B2C_1A_SLR_SNZ_SIGNUP");
+                        var signupPolicy = policyPrefix + "_" + SignUpPolicy;
+                        window.location = ConfigureRedirectURL(signupPolicy);
                     });
                 };
                 var SetIDPs = function () {
@@ -198,11 +203,8 @@
                         //var url = decodeURIComponent(redirectURI) + "#error=" + errorCode + ":" + redirectURL;
                         var url = decodeURIComponent(redirectURI) + "#error=access_denied&error_description=AAD_Custom_461:" + redirectURL;
                         window.location.replace(url);
-
-
                     });
-
-                    HandleSpinnerEvents();
+                
                     BindEvent();
                     clearInterval(intervalHandle);
 
