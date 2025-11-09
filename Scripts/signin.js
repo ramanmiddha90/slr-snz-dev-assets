@@ -65,11 +65,11 @@
                 function ConfigureRedirectURL(policy) {
                     var queryparams = JSON.parse($("#queryparams").val());
                     var countryCode = setQueryParam(queryparams.countryCode, "");
-                    var applicationType = setQueryParam(queryparams.applicationType, "MIAC");
+                    var applicationType = setQueryParam(queryparams.applicationType, "HCP");
                     var return_url = queryparams.return_url ?? "";
                     var clientId = queryparams.clientId ?? "";
                     var redirect_uri = queryparams.redirect_uri ?? "";
-                    var UILanguage = queryparams.UILanguage ?? "EN";
+                    var UILanguage = queryparams.userLanguage ?? "EN";
                     var queryparams = new URLSearchParams(window.location.search);
                     var originURL = document.domain;
                     var tenantName = originURL.replace(".b2clogin.com", "") + ".onmicrosoft.com";
