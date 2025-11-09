@@ -14,7 +14,7 @@
                             LoadSpinner(false);
                             //username and password text not shown in self asserted that is the reason to handle it using obserables
                             if ($("#claimVerificationServerError").text().includes("username or password provided")) {
-                                $("#claimVerificationServerError").text("Es konnte kein Konto für die angegebene Benutzer-ID gefunden werden.");
+                                $("#claimVerificationServerError").html("Es konnte kein Konto für die angegebene Benutzer-ID gefunden werden.");
                             }
                         }
                     });
