@@ -14,7 +14,7 @@
                             LoadSpinner(false);
                             //username and password text not shown in self asserted that is the reason to handle it using obserables
                             if ($("#claimVerificationServerError").text().includes("username or password provided")) {
-                                $("#claimVerificationServerError").html(GetMessageBasedOnCode("M-001"));
+                                $("#claimVerificationServerError").html(GetMessageBasedOnCode("M-0001"));
                             }
 
                             $("#attributeList").after($("#claimVerificationServerError"));
