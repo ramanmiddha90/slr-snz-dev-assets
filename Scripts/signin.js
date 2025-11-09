@@ -16,6 +16,7 @@
                             if ($("#claimVerificationServerError").text().includes("username or password provided")) {
                                 $("#claimVerificationServerError").html(GetMessageBasedOnCode("M-001"));
                             }
+
                             $("#attributeList").after($("#claimVerificationServerError"));
                         }
                     });
