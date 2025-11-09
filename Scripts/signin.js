@@ -1,210 +1,281 @@
-//signin.html;
-(function onPageReady() {
-    var intervalHandle = setInterval(
-        function () {
-            if (window.pageReady) {
-                var policyPrefix = "B2C_1A_SLR_SNZ";
-                var SNZPolicy = "SNZ_LOGIN";
-                var SwissRXPolicy = "SWISSRX_LOGIN";
-                var PassResetPolicy = "PASSRESET";
-                var SignUpPolicy = "SIGNUP";
-                var HandleSpinnerEvents = function () {
-                    var targetNode = document.getElementById('claimVerificationServerError');
-                    //debugger;
-                    var observer = new MutationObserver(function () {
-                        if (targetNode.style.display != 'none') {
-                            LoadSpinner(false);
-                            //username and password text not shown in self asserted that is the reason to handle it using obserables
-                            if ($("#claimVerificationServerError").text().includes("username or password provided")) {
-                                $("#claimVerificationServerError").html(GetMessageBasedOnCode("M-0001"));
-                            }
+﻿'use strict';
 
-                            $("#attributeList").after($("#claimVerificationServerError"));
-                        }
-                    });
-                    observer.observe(targetNode, { attributes: true, attributeFilter: ['style'] });
-                };
+// signin.js — modern, robust rewrite for Azure AD B2C custom page
+// - Removes jQuery dependency (pure DOM APIs)
+// - Defensive checks around optional elements / JSON blobs
+// - Clear helpers, consistent naming, early exits
+// - Cleans up observers and intervals to avoid leaks
+// - Keeps behavior parity with the provided script
 
-                function GetMessageBasedOnCode(code) {
-                    var messageText = $("#claimVerificationServerError")?.text();
-                    if ($("#FormConfig") != null) {
-                        var formConfig = $.parseJSON($("#FormConfig").val());
-                        formConfig.messages.forEach(function (message) {
-                            if (message.code != undefined && message.code == code) {
-                                messageText = message.value;
-                                return false;
-                            }
-                        });
-                    }
-                    return messageText;
-                };
-                function LoadSpinner(showLoader) {
-                    if (showLoader == true) {
-                        document.getElementById('loader-backdrop').style.display = 'flex';
-                    }
-                    else {
-                        document.getElementById('loader-backdrop').style.display = 'none';
-                    }
-                }
-                function GetParameterValues(param) {
-                    var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-                    for (var i = 0; i < url.length; i++) {
-                        var urlparam = url[i].split('=');
-                        if (urlparam[0].toUpperCase() == param.toUpperCase()) {
-                            return urlparam[1];
-                        }
+(function initSignInPage() {
+    /*** ───────────────────────── Helpers ───────────────────────── ***/
+    const $ = (sel, ctx = document) => ctx.querySelector(sel);
+    const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+    const exists = (el) => el instanceof Element;
+    const isVisible = (el) => !!el && el.offsetParent !== null && el.offsetHeight > 0 && getComputedStyle(el).display !== 'none';
 
-                    }
-                    return null;
-                };
+    const parseJsonFromInput = (inputId) => {
+        const el = document.getElementById(inputId);
+        if (!exists(el)) return null;
+        try { return JSON.parse(el.value || el.textContent || ''); } catch { return null; }
+    };
 
-                function setQueryParam(value, defaultValue = "") {
-                    if (value == "" || value == null || value == undefined) {
-                        value = defaultValue
-                    }
-                    return value;
-                }
-                function LoadFields() {
-                    try {
-                        var formConfig = $.parseJSON($("#FormConfig").val());
-                        formConfig.steps[0].fields.forEach(function (UXField) {
-                            if (UXField.fieldType == "custom" && UXField.visible) {
-                                if (UXField.text != null) {
-                                    $("#" + UXField.name).text(UXField.text);
-                                }
-                            }
-                        });
-                    }
-                    catch {
+    const byDefault = (value, fallback = '') => (value === undefined || value === null || value === '') ? fallback : value;
 
-                    }
-                }
-                function ConfigureRedirectURL(policy) {
-                    var queryparams = JSON.parse($("#queryparams").val());
-                    var countryCode = setQueryParam(queryparams.countryCode, "");
-                    var applicationType = setQueryParam(queryparams.applicationType, "HCP");
-                    var return_url = queryparams.return_url ?? "";
-                    var clientId = queryparams.clientId ?? "";
-                    var redirect_uri = queryparams.redirect_uri ?? "";
-                    var UILanguage = queryparams.userLanguage ?? "EN";
-                    var queryparams = new URLSearchParams(window.location.search);
-                    var originURL = document.domain;
-                    var tenantName = originURL.replace(".b2clogin.com", "") + ".onmicrosoft.com";
-                    var redirectURL = "https://" + originURL + "/" + tenantName +
-                        "/oauth2/v2.0/authorize?p=" + policy + "&client_id=" + clientId +
-                        "&nonce=defaultNonce&redirect_uri=" + redirect_uri + "&scope=openid&response_type=id_token&return_url=" + return_url +
-                        "&cc=" + countryCode + "&at=" + applicationType + "&UI_Locales=" + UILanguage;
+    const showSpinner = (show) => {
+        const backdrop = document.getElementById('loader-backdrop');
+        if (!exists(backdrop)) return;
+        backdrop.style.display = show ? 'flex' : 'none';
+    };
 
-                    return redirectURL;
+    const moveAfter = (node, ref) => {
+        if (!exists(node) || !exists(ref) || node === ref) return;
+        ref.insertAdjacentElement('afterend', node);
+    };
 
-                }
-                var BindEvent = function () {
-                    HandleSpinnerEvents();
-                    $("#SNZ_LOGIN").click(function (event) {
-                        var policyName = policyPrefix + "_" + SNZPolicy;
-                        var queryparams = new URLSearchParams(window.location.search);
-                        queryparams.set("p", policyName);
-                        window.location.search = queryparams.toString();
-                    });
-                    $("#SWISSRX_LOGIN").click(function (event) {
-                        var policyName = policyPrefix + "_" + SwissRXPolicy;
-                        var queryparams = new URLSearchParams(window.location.search);
-                        queryparams.set("p", policyName);
-                        window.location.search = queryparams.toString();
-                    });
-                    $("#resetPassword").click(function (event) {
-                        var passResetPolicy = policyPrefix + "_" + PassResetPolicy;
-                        window.location = ConfigureRedirectURL(passResetPolicy);
-                    });
+    const getQueryParam = (key) => new URLSearchParams(window.location.search).get(key);
 
-                    $("#signup").click(function (event) {
-                        var signupPolicy = policyPrefix + "_" + SignUpPolicy;
-                        window.location = ConfigureRedirectURL(signupPolicy);
-                    });
-                };
-                var SetIDPs = function () {
-                    try {
-                        if ($("#FieldInfo") != null && $("#FieldInfo") != undefined) {
-                            var fieldInfo = $.parseJSON($("#FieldInfo").val());
-                            var isSSOVisible = false;
-                            if (fieldInfo.IDPs != null && fieldInfo.IDPs != undefined) {
-                                fieldInfo.IDPs.forEach(function (UXField) {
-                                    var IDPSelector = "#" + UXField.Id;
+    const setQueryParam = (key, value) => {
+        const params = new URLSearchParams(window.location.search);
+        params.set(key, value);
+        // Preserve hash if present
+        const hash = window.location.hash || '';
+        window.location.search = params.toString() + hash;
+    };
 
-                                    if (UXField.Is_Visible) {
-                                        isSSOVisible = true;
-                                        $(IDPSelector).show();
-                                    }
-                                    else {
-                                        $(IDPSelector).hide();
-                                    }
-                                });
-                            }
-                            if (!isSSOVisible) {
-                                $(".socialIdps").remove();                            }
-                        }
-                    }
-                    catch {
+    const buildAuthorizeUrl = (policy) => {
+        // Expect a JSON blob with inbound params in a hidden input #queryparams
+        const inbound = parseJsonFromInput('queryparams') || {};
 
-                    }
-                }
-                function hasMicrosoftValidationErrors() {
-                    // Select all potential error containers
-                    const errorElements = document.querySelectorAll('.error.itemLevel, .error.pageLevel, #alert');
+        const countryCode = byDefault(inbound.countryCode, '');
+        const applicationTy = byDefault(inbound.applicationType, 'HCP');
+        const returnUrl = byDefault(inbound.return_url, '');
+        const clientId = byDefault(inbound.clientId, '');
+        const redirectUri = byDefault(inbound.redirect_uri, '');
+        const uiLang = byDefault(inbound.userLanguage, 'EN');
 
-                    for (const el of errorElements) {
-                        if (el.offsetParent !== null && el.offsetHeight > 0) {
-                            return true; // Error is actually visible
-                        }
-                    }
-                    return false; // No visible errors
-                }
+        const originHost = document.domain; // e.g., contoso.b2clogin.com
+        const tenantName = originHost.replace('.b2clogin.com', '') + '.onmicrosoft.com';
 
-                document.getElementById("continue").addEventListener("click", function (event) {
-                    // Delay a moment to allow B2C to apply error classes
-                    setTimeout(() => {
-                        if (!hasMicrosoftValidationErrors()) {
-                            LoadSpinner(true);
-                        }
-                    }, 400); // slight delay so DOM updates
-                });
-                var setCustomLabels = function () {
-                    if ($("#api"))
-                        $("#api > .intro:eq(0) ").before("<div class='pageheader intropageheader intro'><p id='intropageheader_lbl'>Login</p></div>");
-                    LoadFields();
-                    // SetIDPs();
-                    $("#customCancel").text($("#cancel").text())
+        const params = new URLSearchParams({
+            p: policy,
+            client_id: clientId,
+            nonce: 'defaultNonce',
+            redirect_uri: redirectUri,
+            scope: 'openid',
+            response_type: 'id_token',
+            return_url: returnUrl,
+            cc: countryCode,
+            at: applicationTy,
+            UI_Locales: uiLang
+        });
 
-                   
-                };
-                var continuteButton = document.getElementById('continue');
-                if (continuteButton && $("#continue").is(':visible')) {
+        return `https://${originHost}/${tenantName}/oauth2/v2.0/authorize?${params.toString()}`;
+    };
 
-                    if ($("#CurrentSignInStatus")) {
-                        $("#CurrentSignInStatus").val("NF");
-                    }
-                    if ($("#customCancel") && $("#customCancel").is(':visible')) {
-                        $("#customCancel").remove();
-                    }
+    const replaceServerErrorIfMatches = () => {
+        const errorEl = document.getElementById('claimVerificationServerError');
+        if (!exists(errorEl) || !isVisible(errorEl)) return;
 
-                    $("#continue").after("<button id='customCancel'>Cancel</button>");
-                    $(".password_li").filter(":last").append("<div class='forgot-password center-height'><a id='resetPassword' href='javascript:undefined'>Forgot your password?</a></div>");
-                    setCustomLabels();
-                    $("#customCancel").click(function () {
-                        var redirectURL = GetParameterValues('return_url'); //Encoded value FE URL
-                        if (redirectURL == null)
-                            redirectURL = "";
-                        //microsoft redirecturl
-                        var redirectURI = GetParameterValues('redirect_uri');
-                        var url = decodeURIComponent(redirectURI) + "#error=access_denied&error_description=AAD_Custom_461:" + redirectURL;
-                        window.location.replace(url);
-                    });
-                
-                    BindEvent();
-                    clearInterval(intervalHandle);
+        // When Microsoft renders a username/password error, swap to configured message M-0001 if present
+        const text = (errorEl.textContent || '').toLowerCase();
+        if (text.includes('username or password provided')) {
+            const custom = getMessageByCode('M-0001');
+            if (custom) errorEl.innerHTML = custom;
+        }
 
+        // Ensure error appears after #attributeList
+        const attrList = document.getElementById('attributeList');
+        if (exists(attrList)) moveAfter(errorEl, attrList);
+    };
 
-                }
+    const getMessageByCode = (code) => {
+        const formConfig = parseJsonFromInput('FormConfig');
+        if (!formConfig?.messages?.length) return $('#claimVerificationServerError')?.textContent || '';
+
+        const msg = formConfig.messages.find((m) => m?.code === code);
+        return msg?.value || $('#claimVerificationServerError')?.textContent || '';
+    };
+
+    const renderCustomFields = () => {
+        const formConfig = parseJsonFromInput('FormConfig');
+        if (!formConfig?.steps?.length) return;
+        const step0Fields = formConfig.steps[0]?.fields || [];
+
+        step0Fields.forEach((field) => {
+            if (field.fieldType === 'custom' && field.visible && field.text != null && field.name) {
+                const target = document.getElementById(field.name);
+                if (exists(target)) target.textContent = String(field.text);
             }
-        }, 50);
-}());
+        });
+    };
+
+    const configureIdpsVisibility = () => {
+        const info = parseJsonFromInput('FieldInfo');
+        if (!info?.IDPs) return;
+
+        let anyVisible = false;
+        info.IDPs.forEach((idp) => {
+            const el = document.getElementById(idp.Id);
+            if (!exists(el)) return;
+
+            if (idp.Is_Visible) {
+                anyVisible = true;
+                el.style.display = '';
+            } else {
+                el.style.display = 'none';
+            }
+        });
+
+        if (!anyVisible) $$('.socialIdps').forEach((el) => el.remove());
+    };
+
+    const hasMsValidationErrors = () => {
+        const candidates = $$('.error.itemLevel, .error.pageLevel, #alert');
+        return candidates.some((el) => isVisible(el));
+    };
+
+    /*** ───────────────────── UI bootstrapping ───────────────────── ***/
+    const setCustomLabels = () => {
+        const api = document.getElementById('api');
+        if (exists(api)) {
+            const intro = api.querySelector('.intro');
+            if (intro) intro.insertAdjacentHTML('beforebegin', "<div class='pageheader intropageheader intro'><p id='intropageheader_lbl'>Login</p></div>");
+        }
+
+        renderCustomFields();
+        // configureIdpsVisibility(); // Uncomment if you need to manage IDP visibility dynamically
+
+        const cancel = document.getElementById('cancel');
+        const customCancel = document.getElementById('customCancel');
+        if (exists(cancel) && exists(customCancel)) customCancel.textContent = cancel.textContent || 'Cancel';
+    };
+
+    const wireBehavior = (policyPrefix, policyMap) => {
+        // SNZ / SwissRX buttons simply swap the 'p' policy in querystring
+        const snzBtn = document.getElementById('SNZ_LOGIN');
+        const swissBtn = document.getElementById('SWISSRX_LOGIN');
+
+        if (exists(snzBtn)) snzBtn.addEventListener('click', () => setQueryParam('p', `${policyPrefix}_${policyMap.SNZ}`));
+        if (exists(swissBtn)) swissBtn.addEventListener('click', () => setQueryParam('p', `${policyPrefix}_${policyMap.SWISSRX}`));
+
+        const resetAnchor = document.getElementById('resetPassword');
+        if (exists(resetAnchor)) resetAnchor.addEventListener('click', () => {
+            window.location.href = buildAuthorizeUrl(`${policyPrefix}_${policyMap.PASSRESET}`);
+        });
+
+        const signupAnchor = document.getElementById('signup');
+        if (exists(signupAnchor)) signupAnchor.addEventListener('click', () => {
+            window.location.href = buildAuthorizeUrl(`${policyPrefix}_${policyMap.SIGNUP}`);
+        });
+    };
+
+    const ensureCustomCancel = () => {
+        const continueBtn = document.getElementById('continue');
+        if (!exists(continueBtn) || !isVisible(continueBtn)) return false;
+
+        const status = document.getElementById('CurrentSignInStatus');
+        if (exists(status)) status.value = 'NF';
+
+        // Remove existing custom cancel if any
+        const oldCustom = document.getElementById('customCancel');
+        if (exists(oldCustom)) oldCustom.remove();
+
+        // Insert custom Cancel button right after Continue
+        continueBtn.insertAdjacentHTML('afterend', "<button id='customCancel'>Cancel</button>");
+
+        // Add forgot-password link
+        const pwdLis = $$('.password_li');
+        if (pwdLis.length) {
+            const last = pwdLis[pwdLis.length - 1];
+            last.insertAdjacentHTML('beforeend', "<div class='forgot-password center-height'><a id='resetPassword' href='javascript:void(0)'>Forgot your password?</a></div>");
+        }
+
+        // Wire cancel behavior
+        const customCancel = document.getElementById('customCancel');
+        if (exists(customCancel)) customCancel.addEventListener('click', () => {
+            const redirectUrl = getQueryParam('return_url') || '';
+            const redirectUri = getQueryParam('redirect_uri') || '';
+            const dest = decodeURIComponent(redirectUri) + `#error=access_denied&error_description=AAD_Custom_461:${redirectUrl}`;
+            window.location.replace(dest);
+        });
+
+        return true;
+    };
+
+    const attachContinueSpinnerGuard = () => {
+        const continueBtn = document.getElementById('continue');
+        if (!exists(continueBtn)) return;
+
+        continueBtn.addEventListener('click', () => {
+            // Allow B2C to render validation state, then decide on showing spinner
+            window.setTimeout(() => {
+                if (!hasMsValidationErrors()) showSpinner(true);
+            }, 400);
+        });
+    };
+
+    const observeServerErrorVisibility = () => {
+        const target = document.getElementById('claimVerificationServerError');
+        if (!exists(target)) return { disconnect: () => { } };
+
+        const obs = new MutationObserver(() => {
+            if (isVisible(target)) {
+                showSpinner(false);
+                replaceServerErrorIfMatches();
+            }
+        });
+
+        obs.observe(target, { attributes: true, attributeFilter: ['style', 'class'] });
+        return obs;
+    };
+
+    /*** ───────────────────── Boot loop / lifecycle ───────────────────── ***/
+    const POLICY_PREFIX = 'B2C_1A_SLR_SNZ';
+    const policies = Object.freeze({ SNZ: 'SNZ_LOGIN', SWISSRX: 'SWISSRX_LOGIN', PASSRESET: 'PASSRESET', SIGNUP: 'SIGNUP' });
+
+    let errorObserver = null;
+    let pollHandle = null;
+    let ticks = 0;
+    const MAX_TICKS = 400; // 20s @ 50ms
+
+    const tryBoot = () => {
+        // Wait until the page (and B2C controls) say they're ready, and we can find a visible Continue button.
+        if (!window.pageReady) return;
+
+        const ready = ensureCustomCancel();
+        if (!ready) return;
+
+        setCustomLabels();
+        attachContinueSpinnerGuard();
+        wireBehavior(POLICY_PREFIX, policies);
+        errorObserver = observeServerErrorVisibility();
+
+        // One-time spinner stop if an error is already visible
+        replaceServerErrorIfMatches();
+
+        clearInterval(pollHandle);
+        pollHandle = null;
+    };
+
+    pollHandle = setInterval(() => {
+        try {
+            if (++ticks > MAX_TICKS) {
+                clearInterval(pollHandle);
+                pollHandle = null;
+                return;
+            }
+            tryBoot();
+        } catch (e) {
+            // Fail safe: do not crash the page, just stop polling
+            clearInterval(pollHandle);
+            pollHandle = null;
+            // Optionally report e to a logger here
+        }
+    }, 50);
+
+    window.addEventListener('beforeunload', () => {
+        if (pollHandle) clearInterval(pollHandle);
+        if (errorObserver?.disconnect) errorObserver.disconnect();
+    });
+})();
