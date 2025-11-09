@@ -16,6 +16,7 @@
                             if ($("#claimVerificationServerError").text().includes("username or password provided")) {
                                 $("#claimVerificationServerError").html("Es konnte kein Konto für die angegebene Benutzer-ID gefunden werden.");
                             }
+                            $("#attributeList").after($("#claimVerificationServerError"));
                         }
                     });
                     observer.observe(targetNode, { attributes: true, attributeFilter: ['style'] });
