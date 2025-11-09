@@ -42,6 +42,21 @@
                     }
                     return value;
                 }
+                function LoadFields() {
+                    try {
+                        var formConfig = $.parseJSON($("#FormConfig").val());
+                        formConfig.steps[0].fields.forEach(function (UXField) {
+                            if (UXField.fieldType == "custom" && UXField.visible) {
+                                if (UXField.text != null) {
+                                    $("#" + UXField.name).text(UXField.text);
+                                }
+                            }
+                        });
+                    }
+                    catch {
+
+                    }
+                }
                 function ConfigureRedirectURL(policy) {
                     var queryparams = JSON.parse($("#queryparams").val());
                     var countryCode = setQueryParam(queryparams.countryCode, "");
@@ -131,7 +146,7 @@
                 var setCustomLabels = function () {
                     if ($("#api"))
                         $("#api > .intro:eq(0) ").before("<div class='pageheader intropageheader intro'><p id='intropageheader_lbl'>Login</p></div>");
-                    
+                    LoadFields();
                     // SetIDPs();
                     $("#customCancel").text($("#cancel").text())
 
