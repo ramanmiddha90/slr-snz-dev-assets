@@ -29,7 +29,7 @@
                         var formConfig = $.parseJSON($("#FormConfig").val());
                         formConfig.messages.forEach(function (message) {
                             if (message.code != undefined && message.code == code) {
-                                messageText = message.Text;
+                                messageText = message.value;
                                 return false;
                             }
                         });
