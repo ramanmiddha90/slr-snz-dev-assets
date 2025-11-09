@@ -189,18 +189,13 @@
 
                     $("#continue").after("<button id='customCancel'>Cancel</button>");
                     $(".password_li").filter(":last").append("<div class='forgot-password center-height'><a id='resetPassword' href='javascript:undefined'>Forgot your password?</a></div>");
-
                     setCustomLabels();
-
                     $("#customCancel").click(function () {
-                        //debugger;
-                      
                         var redirectURL = GetParameterValues('return_url'); //Encoded value FE URL
                         if (redirectURL == null)
                             redirectURL = "";
                         //microsoft redirecturl
                         var redirectURI = GetParameterValues('redirect_uri');
-                        //var url = decodeURIComponent(redirectURI) + "#error=" + errorCode + ":" + redirectURL;
                         var url = decodeURIComponent(redirectURI) + "#error=access_denied&error_description=AAD_Custom_461:" + redirectURL;
                         window.location.replace(url);
                     });
