@@ -189,6 +189,11 @@
                         if (currentStep == 1) {
                             CheckFormConfiguraiton(queryparams, formConfig);
                         }
+                        if (currentStep == 2 || currentStep == 3) {
+                            document.querySelectorAll(".attr li").forEach(li => {
+                                li.style.display = 'none';
+                            });
+                        }
                         formConfig.steps[currentStep].fields.forEach(function (UXField) {
 
                             var fieldId = UXField.name;
@@ -265,12 +270,7 @@
                     $("#continue").after("<button id='customCancel'>Cancel</button>");
                     $("#customCancel").text($("#cancel").text())
                     SetPolicyTC();
-                    // $("#requiredFieldMissing").before("<div class='intro'><p id='introaccountheader_lbl' class='customLabelIntro'>Account Details</p></div>");
-                    // if ($("#api"))
-                    //     $("#api > .intro:eq(0) ").before("<div class='pageheader intropageheader intro'><p id='intropageheader_lbl'>Register</p></div>");
-                    // // if ($(".FieldInfo_li"))
-                    //     $(".FieldInfo_li").after("<li class='TextBox scoutUserFirstName_li'><div class='intro'><p id='personalInfo_lbl' class='customLabelIntro'>Personal Information</p></div></li>");
-
+                  
                 }
                 function AttachCancelEvent() {
                     $("#customCancel").click(function (e) {
