@@ -206,7 +206,7 @@
                             }
                             else {
                                 if (UXField.visible) {
-
+                                  
                                     if (UXField.required) {
                                         let objIndex = SA_FIELDS.AttributeFields.findIndex(
                                             (obj) => obj.ID == fieldId
@@ -217,10 +217,7 @@
                                             $(fieldAttrLabelId).text($(fieldAttrLabelId).text() + "*");
                                         }
                                     }
-                                    else {
-                                        $(fieldAttr).show();
-
-                                    }
+                                    $(fieldAttr).show();
                                     ///switch case based on type of fields
                                     if (UXField.content != undefined && UXField.content.value != undefined) {
                                         var path = atob(UXField.content.path);
