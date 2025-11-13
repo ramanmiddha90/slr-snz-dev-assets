@@ -619,8 +619,8 @@
     <div class="container" role="main">
         <div class="logo"><img src="https://slr-snz-assets.pages.dev/objects/logo.svg" alt=""></div>
         <!-- <div class="country-lang"><img src="https://slr-snz-assets.pages.dev/objects/functional-globe.svg"
-                alt="globe icon"><span class="co-lan">
-                English</span></div> -->
+        alt="globe icon"><span class="co-lan">
+        English</span></div> -->
         <!-- <div class="header-container">
            <img src="https://slr-snz-assets.pages.dev/objects/arrow-left.svg" alt="back arrow">
             <h1 class="header">Verify your Email 1/2</h1>
@@ -645,10 +645,28 @@
         <div class="claims-provider-list-buttons social .signuplink" role="form">
             <div class="intro">
                 <div style="margin-top:16px;font-size:18px">
-                    <span id="lblSignup" aria-level="1">Not having a Sandoz account yet? </span>
-                    <a id="signup" href='javascript:undefined'>Sign up now!</a>
+                    <span id="lblSignup" aria-level="1">
+                        Not having a Sandoz account yet?
+                        <a id="signup" href='javascript:undefined'>Sign up now!</a>
                 </div>
             </div>
+        </div>
+        <!-- Help text -->
+        <div class="claims-provider-list-buttons social .signuplink" role="form">
+            <p class="help-text">
+                <span id="lblSignup"> You do not have Sandoz Account? </span>
+                <a href="#" id="signup" aria-label="Sign up now">Sign up now!</a>
+            </p>
+        </div>
+        <!-- SSO Divider -->
+        <div class="sso-line">
+            <span>SSO Login</span>
+        </div>
+
+        <!-- SSO Buttons -->
+        <div class="row" aria-label="Single sign-on options">
+            <button class="btn primary" id="SNZ_LOGIN" type="button">Sandoz SSO</button>
+            <button class="btn secondary" id="SWISSRX_LOGIN"  type="button">SwisRX</button>
         </div>
     </div>
     <div id="loader-backdrop">
