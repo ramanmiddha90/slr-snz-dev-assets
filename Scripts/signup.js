@@ -1,304 +1,428 @@
-(function onPageReady() {
-    var intervalHandle = setInterval(
-        function () {
-            if (window.pageReady) {
+/*
+ * Refactored UI Logic – modular, readable, and easy to maintain
+ * - Uses a namespaced module (B2CPage) to avoid globals
+ * - Caches selectors and constants
+ * - Replaces ad‑hoc URL parsing with URLSearchParams
+ * - Defensive checks + early returns
+ * - Keeps compatibility with jQuery-dependent DOM
+ * - Supports delayed rendering via polling with a timeout fail-safe
+ */
 
+(() => {
+    "use strict";
 
-                function GetParameterValues(param) {
-                    var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-                    for (var i = 0; i < url.length; i++) {
-                        var urlparam = url[i].split('=');
-                        if (urlparam[0].toUpperCase() == param.toUpperCase()) {
-                            return urlparam[1];
-                        }
+    // ==========================
+    // Constants & Selectors
+    // ==========================
+    const SELECTORS = Object.freeze({
+        continueBtn: "#continue",
+        cancelBtn: "#cancel",
+        customCancelBtn: "#customCancel",
+        countryDropdown: "#country",
+        passwordInput: "#newPassword",
+        passwordStrength: ".passwordStrength",
+        passwordStrengthFill: "#strength-fill",
+        ruleLength: "#rule-length",
+        ruleNumber: "#rule-number",
+        ruleSpecial: "#rule-special",
+        header: ".header",
+        dots: ".dots span",
+        queryParams: "#queryparams",
+        formConfig: "#FormConfig",
+        currentStep: "#currentStep",
+        emailError: "#emailVerificationControl_error_message",
+        attrLis: ".attr li",
+        sendCodeBtn: "#emailVerificationControl_but_send_code",
+    });
 
-                    }
-                    return null;
-                };
+    const ASSETS = Object.freeze({
+        success: "https://slr-snz-dev-assets.pages.dev/objects/success.svg",
+        failed: "https://slr-snz-dev-assets.pages.dev/objects/failed.svg",
+    });
 
-                function setDot(node, ok) {
+    // ==========================
+    // Utilities
+    // ==========================
+    const qs = (sel, ctx = document) => ctx.querySelector(sel);
+    const qsa = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 
-                    node.src = ok ? 'https://slr-snz-dev-assets.pages.dev/objects/success.svg' : 'https://slr-snz-dev-assets.pages.dev/objects/failed.svg';
-                    node.alt = ok ? 'check-mark' : 'cross-mark'
+    const setDisabled = ($el, disabled = true) => {
+        if (!$el || !$el.length) return;
+        $el.prop("disabled", disabled)
+            .attr("aria-disabled", String(disabled))
+            .toggleClass("disabled", disabled)
+            .css("pointer-events", disabled ? "none" : "auto");
+    };
 
-                }
-                function validatePasswordRules(pwd) {
-                    const strengthFill = document.getElementById('strength-fill');
-                    const ruleLength = document.getElementById('rule-length');
-                    const ruleNumber = document.getElementById('rule-number');
-                    const ruleSpecial = document.getElementById('rule-special');
-                    let strength = 0;
-                    let check = false;
+    const byId = (id) => document.getElementById(id);
 
-                    const lenOk = pwd.length >= 8 && pwd.length <= 16;
-                    if (lenOk) {
-                        strength += 1
-                    }
-                    const numOk = /[0-9]/.test(pwd);
-                    if (numOk) {
-                        strength += 1
+    const safeJSON = (str, fallback = null) => {
+        try { return JSON.parse(str); } catch { return fallback; }
+    };
 
-                    }
-                    const specialOk = /[!@#$%^&*()_\-+={}[\]|\\:;"'<>,.?/~`]/.test(pwd);
-                    if (specialOk) {
-                        strength += 1
-                    }
+    const getUrlParam = (param, url = window.location.href) => {
+        try {
+            const u = new URL(url);
+            return u.searchParams.get(param);
+        } catch { return null; }
+    };
 
-                    let width = (strength / 3) * 100;
-                    strengthFill.style.width = width + "%";
+    const getReferrerParam = (param, ref = document.referrer) => {
+        try {
+            const u = new URL(ref);
+            return u.searchParams.get(param);
+        } catch { return null; }
+    };
 
-                    if (width == 0 && pwd.length) {
-                        strengthFill.style.width = 10 + "%";
-                        strengthFill.style.background = "#4D4D57";
-                    }
-                    if (width > 33 && width <= 50) {
-                        strengthFill.style.background = "#C63736";
-                    } else if (width < 75 && width > 50) {
-                        strengthFill.style.background = "#CB862C";
-                    } else if (width >= 75) {
-                        strengthFill.style.background = "#1A717A";
-                    }
+    const setDot = (node, ok) => {
+        if (!node) return;
+        node.src = ok ? ASSETS.success : ASSETS.failed;
+        node.alt = ok ? "check-mark" : "cross-mark";
+    };
 
-                    setDot(ruleLength, lenOk);
-                    setDot(ruleNumber, numOk);
-                    setDot(ruleSpecial, specialOk);
-                    return lenOk && numOk && specialOk;
-                }
-                function addPasswordToggle() {
-                    const pwdInput = document.getElementById("newPassword");
+    // ==========================
+    // Password Strength & Toggle
+    // ==========================
+    const Password = (() => {
+        const validate = (pwd) => {
+            const strengthFill = qs(SELECTORS.passwordStrengthFill);
+            const ruleLength = qs(SELECTORS.ruleLength);
+            const ruleNumber = qs(SELECTORS.ruleNumber);
+            const ruleSpecial = qs(SELECTORS.ruleSpecial);
 
-                    // Check if B2C has rendered the field
-                    if (pwdInput && !document.querySelector(".password-container")) {
-                        // Create container
-                        const container = document.createElement("div");
-                        container.className = "password-container";
+            let strength = 0;
+            const lenOk = pwd.length >= 8 && pwd.length <= 16;
+            if (lenOk) strength += 1;
+            const numOk = /[0-9]/.test(pwd);
+            if (numOk) strength += 1;
+            const specialOk = /[!@#$%^&*()_\-+={}\[\]|\\:;"'<>,.?\/~`]/.test(pwd);
+            if (specialOk) strength += 1;
 
-                        // Insert container before the password input
-                        pwdInput.parentNode.insertBefore(container, pwdInput);
-
-                        // Move the input into the container
-                        container.appendChild(pwdInput);
-
-                        // Add toggle button
-                        const toggleBtn = document.createElement("span");
-                        toggleBtn.className = "toggle-password";
-                        toggleBtn.innerHTML = "👁"; // You can replace with SVG
-                        toggleBtn.onclick = function () {
-                            pwdInput.type = pwdInput.type === "password" ? "text" : "password";
-                        };
-                        container.appendChild(toggleBtn);
-                    }
-                    pwdInput.addEventListener('input', () => {
-                        validatePasswordRules(pwdInput.value);
-                    });
-                }
-                function GetRedirectURLFromReferrer(param) {
-                    var url = document.referrer.slice(document.referrer.indexOf('?') + 1).split('&');
-                    for (var i = 0; i < url.length; i++) {
-                        var urlparam = url[i].split('=');
-                        if (urlparam[0].toUpperCase() == param.toUpperCase()) {
-                            return urlparam[1];
-                        }
-
-                    }
-                    return null;
-                }
-
-                function LoadCountries(countries, countryCode) {
-                    const dropdown = document.getElementById("country");
-
-
-                    for (const [name, code] of Object.entries(countries)) {
-
-                        const option = document.createElement("option");
-                        option.value = code;   // backend code (e.g., AD)
-                        option.textContent = name; // user-facing label (e.g., Andorra)
-                        dropdown.appendChild(option);
-                    }
-                }
-                function SetHeader(currentStep) {
-                    if (currentStep == 0) {
-                        $(".header").text("Choose your country!");
-                        $(".dots span:nth-of-type(1)").removeClass("active");
-                        $(".dots span:nth-of-type(2)").removeClass("active");
-                        $(".dots span:nth-of-type(3)").removeClass("active");
-                    }
-                    if (currentStep == 1) {
-                        addPasswordToggle();
-                        $(".passwordStrength").show();
-                        $(".passwordStrength").appendTo(".newPassword_li")
-                    }
-                    if (currentStep == 2) {
-                        $(".header").text("Profile Information 2/3")
-                        $(".dots span:nth-of-type(2)").addClass("active");
-                        $(".dots span:nth-of-type(1)").removeClass("active");
-                        $(".dots span:nth-of-type(3)").removeClass("active");
-                    }
-                    if (currentStep == 3) {
-                        $(".header").text("Profile Information 3/3")
-                        $(".dots span:nth-of-type(3)").addClass("active");
-                        $(".dots span:nth-of-type(1)").removeClass("active");
-                        $(".dots span:nth-of-type(2)").removeClass("active");
-                    }
-                }
-
-                function CheckFormConfiguraiton(queryparams, formConfig) {
-                    var hasCountrCode = queryparams.countryCode != undefined && queryparams.countryCode != "" && queryparams.countryCode != "{OAUTH-KV:cc}";
-                    var continueButton = document.getElementById("continue");
-                    var sendButton = document.getElementsByClassName("sendCode");
-                    //if has country code
-                    var isCountryConfigured = false;
-                    if (hasCountrCode) {
-                        //check country is configured
-                        for (const [name, code] of Object.entries(formConfig.countries)) {
-                            if (queryparams.countryCode.toUpperCase() == code.toUpperCase()) {
-                                console.log("Country Code Found");
-                                //   document.getElementById('country').value =queryparams.countryCode;
-                                isCountryConfigured = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (!isCountryConfigured) {
-                        continueButton.disabled = true;
-                        $("#emailVerificationControl_error_message").text("Invalid configuraiton for this country.Please check the configuration!");
-                        $("#emailVerificationControl_error_message").show();
-                        DisableField($("#continue"));
-                        DisableField($("#emailVerificationControl_but_send_code"));
-
-                    }
-
-                }
-
-                function DisableField(field) {
-                    field.prop("disabled", true);           // native disabled (matches :disabled)
-                    field.attr("aria-disabled", "true");     // aria selector
-                    field.addClass("disabled");
-                    field.css("pointer-events", "none");
-                }
-
-                function LoadFields() {
-                    try {
-                        var queryparams = JSON.parse($("#queryparams").val());
-                        var currentStepVal = $("#currentStep").val();
-                        SetHeader(currentStepVal);
-                        var formConfig = $.parseJSON($("#FormConfig").val());
-                        if (currentStepVal == 0) {
-                            LoadCountries(formConfig.countries);
-                            return;
-                        }
-                        var currentStep = currentStepVal;
-                        if (currentStepVal == 1) {
-                            CheckFormConfiguraiton(queryparams, formConfig);
-                        }
-                        formConfig.steps[currentStep].fields.forEach(function (UXField) {
-                       
-                            var fieldId = UXField.name;
-                            var fieldAttr = "." + fieldId + "_li";
-                            var fieldAttrLabelId = "#" + fieldId + "_label";
-                            if (UXField.type = "custom") {
-                                if (UXField.text != null) {
-                                    $("#" + UXField.Name).text(UXField.text);
-                                }
-                            }
-                            else {
-                                if (UXField.visible) {
-
-                                    if (UXField.required) {
-                                        let objIndex = SA_FIELDS.AttributeFields.findIndex(
-                                            (obj) => obj.ID == fieldId
-                                        );
-                                        if (objIndex >= 0) {
-                                            //Update object's name property.
-                                            SA_FIELDS.AttributeFields[objIndex].IS_REQ = true;
-                                            $(fieldAttrLabelId).text($(fieldAttrLabelId).text() + "*");
-                                        }
-                                    }
-                                    else {
-                                        $(fieldAttr).show();
-
-                                    }
-                                    ///switch case based on type of fields
-                                    if (UXField.content != undefined && UXField.content.value != undefined) {
-                                        var path = atob(UXField.content.path);
-                                        $(path).html(decodeURIComponent(escape(atob(UXField.content.value))));
-                                    }
-
-                                    if (UXField.type == "dropdown" && UXField.options != undefined) {
-                                        $("select#" + UXField.name).find('option:not(:first)').remove();
-                                        const sorted = UXField.options.sort((a, b) => a.key.localeCompare(b.key));
-
-                                        // Add a placeholder option
-                                        // Populate dropdown with sorted items
-                                        $.each(sorted, function (index, item) {
-                                            $("select#" + UXField.name).append(
-                                                $("<option></option>")
-                                                    .attr("value", item.value)  // submitted value
-                                                    .text(item.key)             // display text
-                                            );
-                                        });
-
-                                        if (UXField.SelectedIndex != undefined)
-                                            $("select#" + UXField.Id).find('option:eq(' + UXField.SelectedIndex + ')').attr('selected', 'selected');
-                                    }
-                                }
-                                else {
-                                    $(fieldAttr).hide();
-                                }
-                            }
-
-                        });
-
-                    }
-                    catch {
-
-                    }
-                }
-
-                function SetPolicyTC() {
-                    var sigupPolicyURL = $("label[for='TnCPolicy_true']");
-                    var labelText = "<div>I have read and accept the  <a id='signup' target='_blank'  href='https://prod.solar.sandoz.com/us-en/terms-of-use/'>Terms of Use</a> and Sandoz <a id='signup' target='_blank'  href='https://prod.solar.sandoz.com/us-en/privacy-policy/'>Privacy Policy</a>.</div>";
-                    sigupPolicyURL.html(labelText);
-                }
-                function ArrangeUIElements() {
-                    if ($("#customCancel") && $("#customCancel").is(':visible')) {
-                        $("#customCancel").remove();
-                    }
-                    $("#continue").after("<button id='customCancel'>Cancel</button>");
-                    $("#customCancel").text($("#cancel").text())
-                    SetPolicyTC();
-                    // $("#requiredFieldMissing").before("<div class='intro'><p id='introaccountheader_lbl' class='customLabelIntro'>Account Details</p></div>");
-                    // if ($("#api"))
-                    //     $("#api > .intro:eq(0) ").before("<div class='pageheader intropageheader intro'><p id='intropageheader_lbl'>Register</p></div>");
-                    // // if ($(".FieldInfo_li"))
-                    //     $(".FieldInfo_li").after("<li class='TextBox scoutUserFirstName_li'><div class='intro'><p id='personalInfo_lbl' class='customLabelIntro'>Personal Information</p></div></li>");
-
-                }
-                function AttachCancelEvent() {
-                    $("#customCancel").click(function (e) {
-                        var returnUrl = GetParameterValues('return_url'); //Encoded value FE URL
-                        if (returnUrl == null)
-                            returnUrl = "";
-                        var redirectURI = "";
-                        if (IsSignInFlow()) {
-                            redirectURI = GetRedirectURLFromReferrer('redirect_uri');
-                        }
-                        else {
-                            redirectURI = GetParameterValues('redirect_uri');
-
-                        }
-                        var url = decodeURIComponent(redirectURI) + "#error=access_denied&error_description=AAD_Custom_466:" + returnUrl;
-                        window.location.replace(url);
-                        e.stopPropagation();
-                    });
-                }
-                var continuteButton = document.getElementById('continue');
-                if (continuteButton && $("#continue").is(':visible')) {
-                    ArrangeUIElements();
-                    LoadFields();
-                    AttachCancelEvent();
-                    clearInterval(intervalHandle);
+            const width = (strength / 3) * 100;
+            if (strengthFill) {
+                // Base width
+                strengthFill.style.width = (pwd.length && width === 0) ? "10%" : `${width}%`;
+                // Color ramp
+                if (pwd.length && width === 0) {
+                    strengthFill.style.background = "#4D4D57";
+                } else if (width > 33 && width <= 50) {
+                    strengthFill.style.background = "#C63736";
+                } else if (width < 75 && width > 50) {
+                    strengthFill.style.background = "#CB862C";
+                } else if (width >= 75) {
+                    strengthFill.style.background = "#1A717A";
                 }
             }
-        }, 50);
-}());
+
+            setDot(ruleLength, lenOk);
+            setDot(ruleNumber, numOk);
+            setDot(ruleSpecial, specialOk);
+
+            return lenOk && numOk && specialOk;
+        };
+
+        const addToggle = () => {
+            const input = qs(SELECTORS.passwordInput);
+            if (!input) return;
+
+            // avoid duplicates
+            if (document.querySelector(".password-container")) {
+                // ensure listener
+                input.removeEventListener("input", onInput);
+                input.addEventListener("input", onInput);
+                return;
+            }
+
+            const container = document.createElement("div");
+            container.className = "password-container";
+
+            // Insert container before input and move input inside
+            input.parentNode?.insertBefore(container, input);
+            container.appendChild(input);
+
+            const toggleBtn = document.createElement("span");
+            toggleBtn.className = "toggle-password";
+            toggleBtn.textContent = "👁"; // replace with SVG if needed
+            toggleBtn.addEventListener("click", () => {
+                input.type = input.type === "password" ? "text" : "password";
+            });
+
+            container.appendChild(toggleBtn);
+
+            function onInput() { validate(input.value); }
+            input.addEventListener("input", onInput);
+        };
+
+        return { validate, addToggle };
+    })();
+
+    // ==========================
+    // Header & Steps
+    // ==========================
+    const Steps = (() => {
+        const setHeader = (step) => {
+            const $dots = $(SELECTORS.dots);
+            const $header = $(SELECTORS.header);
+
+            switch (Number(step)) {
+                case 0:
+                    $header.text("Choose your country!");
+                    $dots.removeClass("active");
+                    break;
+                case 1:
+                    Password.addToggle();
+                    $(SELECTORS.passwordStrength).show().appendTo(".newPassword_li");
+                    $dots.removeClass("active").eq(0).addClass("active");
+                    break;
+                case 2:
+                    $header.text("Profile Information 2/3");
+                    $dots.removeClass("active").eq(1).addClass("active");
+                    break;
+                case 3:
+                    $header.text("Profile Information 3/3");
+                    $dots.removeClass("active").eq(2).addClass("active");
+                    break;
+                default:
+                    $dots.removeClass("active");
+            }
+        };
+
+        return { setHeader };
+    })();
+
+    // ==========================
+    // Countries
+    // ==========================
+    const Countries = (() => {
+        const load = (countries) => {
+            const dropdown = qs(SELECTORS.countryDropdown);
+            if (!dropdown || !countries) return;
+            Object.entries(countries).forEach(([name, code]) => {
+                const option = document.createElement("option");
+                option.value = String(code);
+                option.textContent = String(name);
+                dropdown.appendChild(option);
+            });
+        };
+
+        return { load };
+    })();
+
+    // ==========================
+    // Policy / UI arrangements
+    // ==========================
+    const UI = (() => {
+        const setPolicy = () => {
+            const $label = $("label[for='TnCPolicy_true']");
+            const html =
+                "<div>I have read and accept the  <a id='signup' target='_blank' href='https://prod.solar.sandoz.com/us-en/terms-of-use/'>Terms of Use</a> and Sandoz <a id='signup' target='_blank' href='https://prod.solar.sandoz.com/us-en/privacy-policy/'>Privacy Policy</a>.</div>";
+            $label.html(html);
+        };
+
+        const arrange = () => {
+            // Remove stale custom cancel
+            if ($(SELECTORS.customCancelBtn).is(":visible")) {
+                $(SELECTORS.customCancelBtn).remove();
+            }
+
+            // Insert fresh custom cancel next to continue
+            $(SELECTORS.continueBtn).after("<button id='customCancel'>Cancel</button>");
+            $(SELECTORS.customCancelBtn).text($(SELECTORS.cancelBtn).text());
+            setPolicy();
+        };
+
+        const attachCancelHandler = () => {
+            $(document).off("click", SELECTORS.customCancelBtn).on("click", SELECTORS.customCancelBtn, (e) => {
+                e.preventDefault();
+                const returnUrl = getUrlParam("return_url") || ""; // encoded FE URL
+
+                const isSignIn = IsSignInFlow(); // Provided by hosting page (unchanged)
+                const redirectURI = isSignIn ? getReferrerParam("redirect_uri") : getUrlParam("redirect_uri");
+                const base = decodeURIComponent(redirectURI || "");
+
+                const url = `${base}#error=access_denied&error_description=AAD_Custom_466:${returnUrl}`;
+                window.location.replace(url);
+                e.stopPropagation();
+            });
+        };
+
+        return { arrange, attachCancelHandler };
+    })();
+
+    // ==========================
+    // Configuration checks
+    // ==========================
+    const Config = (() => {
+        const checkFormConfiguration = (queryParams, formConfig) => {
+            const $continue = $(SELECTORS.continueBtn);
+            const $sendCode = $(SELECTORS.sendCodeBtn);
+            const $error = $(SELECTORS.emailError);
+
+            const cc = (queryParams && queryParams.countryCode) || "";
+            const hasCode = cc && cc !== "{OAUTH-KV:cc}";
+
+            let configured = false;
+            if (hasCode && formConfig && formConfig.countries) {
+                for (const [name, code] of Object.entries(formConfig.countries)) {
+                    if (String(cc).toUpperCase() === String(code).toUpperCase()) {
+                        configured = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!configured) {
+                setDisabled($continue, true);
+                setDisabled($sendCode, true);
+                $error.text("Invalid configuration for this country. Please check the configuration!").show();
+            }
+        };
+
+        return { checkFormConfiguration };
+    })();
+
+    // ==========================
+    // Field loader (per-step)
+    // ==========================
+    const Fields = (() => {
+        const hideAllAttrLis = () => {
+            qsa(SELECTORS.attrLis).forEach((li) => { li.style.display = "none"; });
+        };
+
+        const applyUXField = (uxField) => {
+            if (!uxField) return;
+
+            const fieldId = uxField.name;
+            const fieldAttr = `.${fieldId}_li`;
+            const fieldAttrLabelId = `#${fieldId}_label`;
+
+            // custom block
+            if (uxField.fieldType === "custom" && uxField.visible) {
+                if (uxField.text != null) {
+                    $(`#${uxField.name}`).text(uxField.text);
+                }
+                return;
+            }
+
+            if (uxField.visible) {
+                // required mark + SA_FIELDS back-compat
+                if (uxField.required && window.SA_FIELDS && Array.isArray(window.SA_FIELDS.AttributeFields)) {
+                    const idx = window.SA_FIELDS.AttributeFields.findIndex((o) => o.ID === fieldId);
+                    if (idx >= 0) {
+                        window.SA_FIELDS.AttributeFields[idx].IS_REQ = true;
+                        const $label = $(fieldAttrLabelId);
+                        $label.text($label.text() + "*");
+                    }
+                }
+
+                $(fieldAttr).show();
+
+                // Inject custom content
+                if (uxField.content && uxField.content.value !== undefined) {
+                    const path = atob(uxField.content.path);
+                    const html = decodeURIComponent(escape(atob(uxField.content.value)));
+                    $(path).html(html);
+                }
+
+                // Dropdown options
+                if (uxField.type === "dropdown" && Array.isArray(uxField.options)) {
+                    const $select = $(`select#${uxField.name}`);
+                    $select.find("option:not(:first)").remove();
+
+                    const sorted = [...uxField.options].sort((a, b) => String(a.key).localeCompare(String(b.key)));
+                    sorted.forEach((opt) => {
+                        $select.append($("<option></option>").attr("value", opt.value).text(opt.key));
+                    });
+
+                    if (uxField.SelectedIndex !== undefined) {
+                        $select.find(`option:eq(${uxField.SelectedIndex})`).attr("selected", "selected");
+                    }
+                }
+            } else {
+                $(fieldAttr).hide();
+            }
+        };
+
+        const load = () => {
+            const queryParams = safeJSON($(SELECTORS.queryParams).val(), {});
+            const currentStep = Number($(SELECTORS.currentStep).val() || 0);
+            const formConfig = $.parseJSON($(SELECTORS.formConfig).val() || "{}");
+
+            Steps.setHeader(currentStep);
+
+            if (currentStep === 0) {
+                Countries.load(formConfig.countries);
+            }
+
+            if (currentStep === 1) {
+                Config.checkFormConfiguration(queryParams, formConfig);
+            }
+
+            if (currentStep === 2 || currentStep === 3) {
+                hideAllAttrLis();
+            }
+
+            const step = formConfig?.steps?.[currentStep];
+            if (step && Array.isArray(step.fields)) {
+                step.fields.forEach(applyUXField);
+            }
+        };
+
+        return { load };
+    })();
+
+    // ==========================
+    // Boot logic with polling (B2C rendering can be delayed)
+    // ==========================
+    const Boot = (() => {
+        const POLL_MS = 50;
+        const TIMEOUT_MS = 15000; // fail-safe
+
+        let handle = null;
+        let startedAt = 0;
+
+        const ready = () => Boolean(window.pageReady) && $(SELECTORS.continueBtn).is(":visible");
+
+        const tryInit = () => {
+            if (!ready()) {
+                if (Date.now() - startedAt > TIMEOUT_MS) {
+                    clearInterval(handle);
+                    // Soft fail: do nothing; page likely not in expected state.
+                }
+                return;
+            }
+
+            UI.arrange();
+            Fields.load();
+            UI.attachCancelHandler();
+            clearInterval(handle);
+        };
+
+        const start = () => {
+            startedAt = Date.now();
+            handle = setInterval(tryInit, POLL_MS);
+        };
+
+        return { start };
+    })();
+
+    // ==========================
+    // Public API (if needed elsewhere)
+    // ==========================
+    window.B2CPage = {
+        Password,
+        Steps,
+        Countries,
+        UI,
+        Config,
+        Fields,
+        Boot,
+    };
+
+    // Auto-start when DOM is ready (and still tolerate late rendering via polling)
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", Boot.start);
+    } else {
+        Boot.start();
+    }
+})();
