@@ -156,8 +156,8 @@
         const snzBtn = document.getElementById('SNZ_LOGIN');
         const swissBtn = document.getElementById('SWISSRX_LOGIN');
 
-        if (exists(snzBtn)) snzBtn.addEventListener('click', () => setQueryParam('p', `${policyPrefix}_${policyMap.SNZ}`));
-        if (exists(swissBtn)) swissBtn.addEventListener('click', () => setQueryParam('p', `${policyPrefix}_${policyMap.SWISSRX}`));
+        if (exists(snzBtn)) snzBtn.addEventListener('click', () => setQueryParam('p', `B2C_1A_SOLAR_SANDOZID_PROD_SNZ_LOGIN`));
+        if (exists(swissBtn)) swissBtn.addEventListener('click', () => setQueryParam('p', `B2C_1A_SOLAR_SANDOZID_PROD_SWISSRX_LOGIN`));
 
         const resetAnchor = document.getElementById('resetPassword');
         if (exists(resetAnchor)) resetAnchor.addEventListener('click', () => {
