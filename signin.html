@@ -14,6 +14,9 @@
         #cancel {
             display: none;
         }
+        #IdpSection {
+            margin: 32px 0px 6px 0px;
+        }
 
         #api-progress {
             display: none !important;
@@ -650,15 +653,17 @@
                 <a href="#" id="signup" aria-label="Sign up now">Sign up now!</a>
             </p>
         </div>
-        <!-- SSO Divider -->
-        <div class="sso-line">
-            <span>SSO Login</span>
-        </div>
+        <div id="IdpSection">
+            <!-- SSO Divider -->
+            <div class="sso-line">
+                <span>SSO Login</span>
+            </div>
 
-        <!-- SSO Buttons -->
-        <div class="row" aria-label="Single sign-on options">
-            <button class="btn primary" id="SNZ_LOGIN" type="button">Sandoz SSO</button>
-            <button class="btn secondary" id="SWISSRX_LOGIN"  type="button">SwisRX</button>
+            <!-- SSO Buttons -->
+            <div class="row" aria-label="Single sign-on options">
+                <button class="btn primary" id="SNZ_LOGIN" type="button">Sandoz SSO</button>
+                <button class="btn secondary" id="SWISSRX_LOGIN" type="button">SwisRX</button>
+            </div>
         </div>
     </div>
     <div id="loader-backdrop">
