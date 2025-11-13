@@ -107,6 +107,10 @@
                 const target = document.getElementById(field.name);
                 if (exists(target)) target.textContent = String(field.text);
             }
+            if (!field.visible) {
+                const target = document.getElementById(field.name);
+                if (exists(target)) target.style.display = "none";
+            }
         });
     };
 
