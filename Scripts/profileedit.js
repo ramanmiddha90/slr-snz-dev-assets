@@ -34,7 +34,32 @@
         attrLis: ".attr li",
         sendCodeBtn: "#emailVerificationControl_but_send_code",
     });
+    const qs = (sel, ctx = document) => ctx.querySelector(sel);
+    const qsa = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 
+    const safeJSON = (str, fallback = null) => {
+        try { return JSON.parse(str); } catch { return fallback; }
+    };
+
+    const getUrlParam = (param, url = window.location.href) => {
+        try {
+            const u = new URL(url);
+            return u.searchParams.get(param);
+        } catch { return null; }
+    };
+
+    const getReferrerParam = (param, ref = document.referrer) => {
+        try {
+            const u = new URL(ref);
+            return u.searchParams.get(param);
+        } catch { return null; }
+    };
+
+    const setDot = (node, ok) => {
+        if (!node) return;
+        node.src = ok ? ASSETS.success : ASSETS.failed;
+        node.alt = ok ? "check-mark" : "cross-mark";
+    };
     // ==========================
     // Field loader (per-step)
     // ==========================
