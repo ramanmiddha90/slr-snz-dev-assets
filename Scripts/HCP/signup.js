@@ -290,56 +290,65 @@
         };
 
         const applyUXField = (uxField) => {
+           
+          
             if (!uxField) return;
 
             const fieldId = uxField.name;
             const fieldAttr = `.${fieldId}_li`;
             const fieldAttrLabelId = `#${fieldId}_label`;
+            try {
 
-            // custom block
-            if (uxField.fieldType === "custom" && uxField.visible) {
-                if (uxField.text != null) {
-                    $(`#${uxField.name}`).text(uxField.text);
+
+                // custom block
+                if (uxField.fieldType === "custom" && uxField.visible) {
+                    if (uxField.text != null) {
+                        $(`#${uxField.name}`).text(uxField.text);
+                    }
+                    return;
                 }
-                return;
+
+                if (uxField.visible) {
+                    // required mark + SA_FIELDS back-compat
+                    if (uxField.required && window.SA_FIELDS && Array.isArray(window.SA_FIELDS.AttributeFields)) {
+                        const idx = window.SA_FIELDS.AttributeFields.findIndex((o) => o.ID === fieldId);
+                        if (idx >= 0) {
+                            window.SA_FIELDS.AttributeFields[idx].IS_REQ = true;
+                            const $label = $(fieldAttrLabelId);
+                            $label.text($label.text() + "*");
+                        }
+                    }
+
+                    $(fieldAttr).show();
+
+                    // Inject custom content
+                    if (uxField.content && uxField.content.value !== undefined) {
+                        const path = atob(uxField.content.path);
+                        const html = decodeURIComponent(escape(atob(uxField.content.value)));
+                        $(path).html(html);
+                    }
+
+                    // Dropdown options
+                    if (uxField.type === "dropdown" && Array.isArray(uxField.options)) {
+                        const $select = $(`select#${uxField.name}`);
+                        $select.find("option:not(:first)").remove();
+
+                        const sorted = [...uxField.options].sort((a, b) => String(a.key).localeCompare(String(b.key)));
+                        sorted.forEach((opt) => {
+                            $select.append($("<option></option>").attr("value", opt.value).text(opt.key));
+                        });
+
+                        if (uxField.SelectedIndex !== undefined) {
+                            $select.find(`option:eq(${uxField.SelectedIndex})`).attr("selected", "selected");
+                        }
+                    }
+                } else {
+                    $(fieldAttr).hide();
+                }
             }
-
-            if (uxField.visible) {
-                // required mark + SA_FIELDS back-compat
-                if (uxField.required && window.SA_FIELDS && Array.isArray(window.SA_FIELDS.AttributeFields)) {
-                    const idx = window.SA_FIELDS.AttributeFields.findIndex((o) => o.ID === fieldId);
-                    if (idx >= 0) {
-                        window.SA_FIELDS.AttributeFields[idx].IS_REQ = true;
-                        const $label = $(fieldAttrLabelId);
-                        $label.text($label.text() + "*");
-                    }
-                }
-
-                $(fieldAttr).show();
-
-                // Inject custom content
-                if (uxField.content && uxField.content.value !== undefined) {
-                    const path = atob(uxField.content.path);
-                    const html = decodeURIComponent(escape(atob(uxField.content.value)));
-                    $(path).html(html);
-                }
-
-                // Dropdown options
-                if (uxField.type === "dropdown" && Array.isArray(uxField.options)) {
-                    const $select = $(`select#${uxField.name}`);
-                    $select.find("option:not(:first)").remove();
-
-                    const sorted = [...uxField.options].sort((a, b) => String(a.key).localeCompare(String(b.key)));
-                    sorted.forEach((opt) => {
-                        $select.append($("<option></option>").attr("value", opt.value).text(opt.key));
-                    });
-
-                    if (uxField.SelectedIndex !== undefined) {
-                        $select.find(`option:eq(${uxField.SelectedIndex})`).attr("selected", "selected");
-                    }
-                }
-            } else {
-                $(fieldAttr).hide();
+            catch
+            {
+                console.log("Error loading Field:" + uxField.name);
             }
         };
 
