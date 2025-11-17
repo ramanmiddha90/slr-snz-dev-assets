@@ -126,31 +126,31 @@ function SubmitDCR() {
 
 function LoadFields() {
 
-    var fieldInfo = $.parseJSON($("#FieldInfo").val());
-    fieldInfo.Fields_Info.forEach(function (UXField) {
-        var fieldAttr = "." + UXField.Id + "_li";
-        var fieldAttrLabelId = "#" + UXField.Id + "_label";
+    //var fieldInfo = $.parseJSON($("#FieldInfo").val());
+    //fieldInfo.Fields_Info.forEach(function (UXField) {
+    //    var fieldAttr = "." + UXField.Id + "_li";
+    //    var fieldAttrLabelId = "#" + UXField.Id + "_label";
 
-        if (UXField.Is_Visible) {
-            if (UXField.Is_Req) {
-                let objIndex = SA_FIELDS.AttributeFields.findIndex(
-                    (obj) => obj.ID == UXField.Id
-                );
-                if (objIndex >= 0) {
-                    //Update object's name property.
-                    SA_FIELDS.AttributeFields[objIndex].IS_REQ = true;
-                    $(fieldAttrLabelId).text($(fieldAttrLabelId).text() + "*");
-                }
-            }
-            else {
-                $(fieldAttr).show();
+    //    if (UXField.Is_Visible) {
+    //        if (UXField.Is_Req) {
+    //            let objIndex = SA_FIELDS.AttributeFields.findIndex(
+    //                (obj) => obj.ID == UXField.Id
+    //            );
+    //            if (objIndex >= 0) {
+    //                //Update object's name property.
+    //                SA_FIELDS.AttributeFields[objIndex].IS_REQ = true;
+    //                $(fieldAttrLabelId).text($(fieldAttrLabelId).text() + "*");
+    //            }
+    //        }
+    //        else {
+    //            $(fieldAttr).show();
 
-            }
-        }
-        else {
-            $(fieldAttr).hide();
-        }
-    });
+    //        }
+    //    }
+    //    else {
+    //        $(fieldAttr).hide();
+    //    }
+    //});
 }
 
 
