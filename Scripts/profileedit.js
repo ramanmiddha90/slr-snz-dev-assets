@@ -141,6 +141,7 @@
             if (step && Array.isArray(step.fields)) {
                 step.fields.forEach(applyUXField);
             }
+            HandleTabEvents(0);
         };
 
         return { load };
