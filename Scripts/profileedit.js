@@ -29,11 +29,23 @@
         dots: ".dots span",
         queryParams: "#queryparams",
         formConfig: "#FormConfig",
+        userInfo:"#UserInfo",
         currentStep: "#currentStep",
         emailError: "#emailVerificationControl_error_message",
         attrLis: ".attr li",
         sendCodeBtn: "#emailVerificationControl_but_send_code",
     });
+    const ElementMap = {
+        "title": "Attribute.Salutation",
+        "firstName": "Attribute.FirstName",
+        "lastName": "Attribute.LastName",
+        "role": "Attribute.PersonTitle",
+        "professionalNumber": "Attribute.SCT_National_ID__c",
+        "telephone": "Attribute.Phone",
+        "speciality": "Attribute.SCT_Primary_Specialty__c",
+        "profession": "Attribute.type",
+        "localId": "Attribute.SCT_National_ID2__c"
+    };
     const qs = (sel, ctx = document) => ctx.querySelector(sel);
     const qsa = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 
@@ -60,6 +72,91 @@
         node.src = ok ? ASSETS.success : ASSETS.failed;
         node.alt = ok ? "check-mark" : "cross-mark";
     };
+    const observer = new MutationObserver(function (mutations, obs) {
+        const form = document.querySelector('form');
+        const cancelBtn = document.querySelector('#cancel');
+        const continueBtn = document.querySelector('#continue')
+            || document.querySelector('button[type="submit"]');
+
+        if (form && continueBtn) {
+
+            $("#lblUpdateMessage").hide();
+
+            obs.disconnect();
+            const cancelHandler = function (e) {
+                e.preventDefault();                      // Stop default
+                e.stopImmediatePropagation(); // Stop internal B2C logic
+            }
+
+            // Replace default click behavior
+            const handler = function (e) {
+                e.preventDefault();                      // Stop default
+                e.stopImmediatePropagation();            // Stop internal B2C logic
+                //Native HTML validation
+                if (!form.checkValidity()) {
+                    form.reportValidity(); // show field-level errors
+                    return;
+                }
+                console.log("profile update request started");
+
+                DCRPRocessor.Process();
+
+                //call ajax api call here
+                console.log("All checks passed. Resuming B2C submission...");
+            };
+            // Attach your handler using capture
+            continueBtn.addEventListener('click', handler, true);
+            cancelBtn.addEventListener('click', cancelHandler, true);
+        }
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+    const DCRPRocessor = (() => {
+
+        const Process = () => {
+            var updateDCRRequest = GenerateUpdateRequest();
+            console.log(updateDCRRequest);
+        }
+        const GenerateUpdateRequest = () => {
+            var updateDCRBody = {};
+            var queryparams = JSON.parse($(SELECTORS.queryParams).val());
+            var userInfo = JSON.parse($(SELECTORS.userInfo).val());
+            const formConfig = $.parseJSON($(SELECTORS.formConfig).val() || "{}");
+            const step = formConfig?.steps?.[0];
+            if (step && Array.isArray(step.fields)) {
+                step.fields.forEach(function (UXField) {
+                    const fieldId = uxField.name;
+                    if (UXField.visible && UXField.fieldType != "custom") {
+                        var backendPropName = ElementMap[fieldId];
+                        if (!backendPropName) return;
+
+                        var type = (UXField.type || "").toLowerCase();
+                        switch (type) {
+                            case "text":
+                            case "dropdown":
+                                value = $("$" + fieldId).val();
+                                break;
+                            case "checkbox":
+                                value = $("$" + fieldId).is(":checked");
+                                break;
+                            default:
+                                console.warn("Unknown field type", type);
+                                value: null;
+                        }
+                        updateDCRBody[backendPropName] = value;
+                        updateDCRBody["B2CId"] = userInfo.SCT_Azure_B2C_Id__c ?? "";
+                        updateDCRBody["CountryCode"] = queryparams.countryCode ?? "";
+                        updateDCRBody["ApplicationType"] = queryparams.applicationType ?? "HCP";
+                        updateDCRBody["Attribute.PersonEmail"] = userInfo.PersonEmail ?? "";
+                    }
+                });
+            }
+            return updateDCRBody;
+        };
+    })();
     // ==========================
     // Field loader (per-step)
     // ==========================
