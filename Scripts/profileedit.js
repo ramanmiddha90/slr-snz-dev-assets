@@ -73,18 +73,17 @@
         node.alt = ok ? "check-mark" : "cross-mark";
     };
     const validateFields = () => {
-
+        var allFieldValid = true;
         SA_FIELDS.AttributeFields.forEach(field => {
             if (field.IS_REQ === true) {
                 var value = $("#" + field.ID).val();
                 if (value == undefined || value == "") {
                     console.warn("invalid value" + field.ID);
-
-                    return false;
+                    allFieldValid = false;
                 }
             }
         });
-        return true;
+        return allFieldValid;
     }
     const observer = new MutationObserver(function (mutations, obs) {
         const form = document.querySelector('form');
