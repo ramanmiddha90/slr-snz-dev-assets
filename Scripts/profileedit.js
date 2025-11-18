@@ -156,6 +156,7 @@
             }
             return updateDCRBody;
         };
+        return { Process };
     })();
     // ==========================
     // Field loader (per-step)
