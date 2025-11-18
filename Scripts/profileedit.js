@@ -132,7 +132,7 @@
                     if (UXField.visible && UXField.fieldType != "custom") {
                         var backendPropName = ElementMap[fieldId];
                         if (!backendPropName) return;
-
+                        let value;
                         var type = (UXField.type || "").toLowerCase();
                         switch (type) {
                             case "text":
