@@ -88,6 +88,20 @@
         node.src = ok ? ASSETS.success : ASSETS.failed;
         node.alt = ok ? "check-mark" : "cross-mark";
     };
+    const validateFields = () => {
+
+        SA_FIELDS.AttributeFields.forEach(field => {
+            if (field.IS_REQ === true) {
+                var value = $("#" + field.ID).val();
+                if (value == undefined || value == "") {
+                    console.warn("invalid value" + field.ID);
+
+                    return false;
+                }
+            }
+        });
+        return true;
+    }
     const observer = new MutationObserver(function (mutations, obs) {
         const form = document.querySelector('form');
         const cancelBtn = document.querySelector('#cancel');
@@ -109,16 +123,10 @@
                 e.preventDefault();                      // Stop default
                 e.stopImmediatePropagation();   
                 
-                if (!form.validateFields()) {
+                if (validateFields()) {
                     $("#requiredFieldMissing").show();
                     return;
                 }
-                //     // Stop internal B2C logic
-                ////Native HTML validation
-                //if (!form.checkValidity()) {
-                //    form.reportValidity(); // show field-level errors
-                //    return;
-                //}
                 console.log("profile update request started");
 
                 DCRPRocessor.Process();
