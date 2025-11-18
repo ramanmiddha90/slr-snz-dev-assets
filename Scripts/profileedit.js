@@ -11,6 +11,22 @@
 (() => {
     "use strict";
 
+    (function ($) {
+
+        $.fn.validateFields = function () {
+            SA_FIELDS.AttributeFields.forEach(field => {
+                if (field.IS_REQ === true) {
+                    var value = $("#" + field.ID).val();
+                    if (value == undefined || value == "") {
+                        console.warn("invalid value" + field.ID);
+                      
+                        return false;
+                    }
+                }
+            });
+        }
+        return true;
+    });
     // ==========================
     // Constants & Selectors
     // ==========================
@@ -90,17 +106,19 @@
 
             // Replace default click behavior
             const handler = function (e) {
-                if (!form.checkValidity()) {
-                    form.reportValidity(); // show field-level errors
-                    return;
-                }
                 e.preventDefault();                      // Stop default
-                e.stopImmediatePropagation();            // Stop internal B2C logic
-                //Native HTML validation
-                if (!form.checkValidity()) {
-                    form.reportValidity(); // show field-level errors
+                e.stopImmediatePropagation();   
+                
+                if (!form.validateFields()) {
+                    $("#requiredFieldMissing").show();
                     return;
                 }
+                //     // Stop internal B2C logic
+                ////Native HTML validation
+                //if (!form.checkValidity()) {
+                //    form.reportValidity(); // show field-level errors
+                //    return;
+                //}
                 console.log("profile update request started");
 
                 DCRPRocessor.Process();
