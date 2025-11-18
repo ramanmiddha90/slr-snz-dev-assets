@@ -35,16 +35,16 @@
         attrLis: ".attr li",
         sendCodeBtn: "#emailVerificationControl_but_send_code",
     });
-    const ElementMap = {
-        "title": "Attribute.Salutation",
-        "firstName": "Attribute.FirstName",
-        "lastName": "Attribute.LastName",
-        "role": "Attribute.PersonTitle",
-        "professionalNumber": "Attribute.SCT_National_ID__c",
-        "telephone": "Attribute.Phone",
-        "speciality": "Attribute.SCT_Primary_Specialty__c",
-        "profession": "Attribute.type",
-        "localId": "Attribute.SCT_National_ID2__c"
+    const AttributeMap = {
+        "title": "Salutation",
+        "firstName": "FirstName",
+        "lastName": ".LastName",
+        "role": "PersonTitle",
+        "professionalNumber": "SCT_National_ID__c",
+        "telephone": "Phone",
+        "speciality": "SCT_Primary_Specialty__c",
+        "profession": "type",
+        "localId": "SCT_National_ID2__c"
     };
     const qs = (sel, ctx = document) => ctx.querySelector(sel);
     const qsa = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
@@ -118,10 +118,11 @@
 
         const Process = () => {
             var updateDCRRequest = GenerateUpdateRequest();
-            console.log(updateDCRRequest);
+            console.log(JSON.stringify(updateDCRRequest));
         }
         const GenerateUpdateRequest = () => {
             var updateDCRBody = {};
+            var Attribute = {};
             var queryparams = JSON.parse($(SELECTORS.queryParams).val());
             var userInfo = JSON.parse($(SELECTORS.userInfo).val());
             const formConfig = $.parseJSON($(SELECTORS.formConfig).val() || "{}");
@@ -130,7 +131,7 @@
                 step.fields.forEach(function (UXField) {
                     const fieldId = UXField.name;
                     if (UXField.visible && UXField.fieldType != "custom") {
-                        var backendPropName = ElementMap[fieldId];
+                        var backendPropName = AttributeMap[fieldId];
                         if (!backendPropName) return;
                         let value;
                         var type = (UXField.type || "").toLowerCase();
@@ -146,11 +147,12 @@
                                 console.warn("Unknown field type", type);
                                 value: null;
                         }
-                        updateDCRBody[backendPropName] = value;
+                        Attribute[backendPropName] = value;
                        
                     }
                 });
             }
+            updateDCRBody["Attribute"] = Attribute;
             updateDCRBody["B2CId"] = userInfo.SCT_Azure_B2C_Id__c ?? "";
             updateDCRBody["CountryCode"] = queryparams.countryCode ?? "";
             updateDCRBody["ApplicationType"] = queryparams.applicationType ?? "HCP";
