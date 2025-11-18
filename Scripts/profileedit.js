@@ -107,7 +107,7 @@
                 e.preventDefault();                      // Stop default
                 e.stopImmediatePropagation();   
                 
-                if (validateFields()) {
+                if (!validateFields()) {
                     $("#requiredFieldMissing").show();
                     return;
                 }
