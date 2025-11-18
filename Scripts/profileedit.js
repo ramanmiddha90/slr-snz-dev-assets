@@ -29,7 +29,7 @@
         dots: ".dots span",
         queryParams: "#queryparams",
         formConfig: "#FormConfig",
-        userInfo:"#UserInfo",
+        userInfo:"#userInfo",
         currentStep: "#currentStep",
         emailError: "#emailVerificationControl_error_message",
         attrLis: ".attr li",
