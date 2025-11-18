@@ -147,13 +147,14 @@
                                 value: null;
                         }
                         updateDCRBody[backendPropName] = value;
-                        updateDCRBody["B2CId"] = userInfo.SCT_Azure_B2C_Id__c ?? "";
-                        updateDCRBody["CountryCode"] = queryparams.countryCode ?? "";
-                        updateDCRBody["ApplicationType"] = queryparams.applicationType ?? "HCP";
-                        updateDCRBody["Attribute.PersonEmail"] = userInfo.PersonEmail ?? "";
+                       
                     }
                 });
             }
+            updateDCRBody["B2CId"] = userInfo.SCT_Azure_B2C_Id__c ?? "";
+            updateDCRBody["CountryCode"] = queryparams.countryCode ?? "";
+            updateDCRBody["ApplicationType"] = queryparams.applicationType ?? "HCP";
+            updateDCRBody["Attribute.PersonEmail"] = userInfo.PersonEmail ?? "";
             return updateDCRBody;
         };
         return { Process };
