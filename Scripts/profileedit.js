@@ -137,10 +137,10 @@
                         switch (type) {
                             case "text":
                             case "dropdown":
-                                value = $("$" + fieldId).val();
+                                value = $("#" + fieldId).val();
                                 break;
                             case "checkbox":
-                                value = $("$" + fieldId).is(":checked");
+                                value = $("#" + fieldId).is(":checked");
                                 break;
                             default:
                                 console.warn("Unknown field type", type);
