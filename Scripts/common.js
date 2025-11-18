@@ -1,7 +1,7 @@
 
 // tabIndex =0 - PE
 // tabIndex =1 - PR
-var PE_POLICY = "B2C_1A_SOLAR_SANDOZID_PROD_PROFILE_EDIT";
+var PE_POLICY = "B2C_1A_SLR_SNZ_PE";
 var PR_POLICY = "B2C_1A_SOLAR_SANDOZID_PROD_PWRESET";
 function HandleTabEvents(tabIndex = 1) {
     if (tabIndex == 1) {
@@ -38,16 +38,16 @@ function setQueryParam(value,defaultValue = "") {
 }
 function SetTabURL(policy) {
     var queryparams = JSON.parse($("#queryparams").val());
-    var countryCode = setQueryParam(queryparams.countryCode, "US");
+    var countryCode = queryparams.countryCode;
     var return_url = queryparams.return_url ?? "";
-    var regType = setQueryParam(queryparams.regType, "V1");
+    var applicationType = queryparams.applicationType ?? "HCP";
     var clientId = queryparams.clientId ?? "";
     var redirect_uri = queryparams.redirect_uri ?? "";
-
-    var queryparams = new URLSearchParams(window.location.search);
-    if (queryparams.has("redirect_uri")) {
-        queryparams.set("p", policy);
-        window.location.replace(window.location.origin + window.location.pathname + "?" + queryparams.toString())
+    var UI_Locales = queryparams.userLanguage ?? "en";
+    var queryString = new URLSearchParams(window.location.search);
+    if (queryString.has("redirect_uri")) {
+        queryString.set("p", policy);
+        window.location.replace(window.location.origin + window.location.pathname + "?" + queryString.toString())
     }
     else {
      
@@ -55,8 +55,8 @@ function SetTabURL(policy) {
         var tenantName = originURL.replace(".b2clogin.com", "") + ".onmicrosoft.com";
         var passwordURL = "https://" + originURL + "/" + tenantName +
                             "/oauth2/v2.0/authorize?p=" + policy +"&client_id=" + clientId +
-                            "&nonce=defaultNonce&redirect_uri=" + redirect_uri + "&scope=openid&response_type=id_token&UI_Locales=en&return_url=" + return_url +
-                            "&countryCode=" + countryCode + "&regType=" + regType;
+            "&nonce=defaultNonce&redirect_uri=" + redirect_uri + "&scope=openid&response_type=id_token&UI_Locales=" + UI_Locales +"&return_url=" + return_url +
+            "&cc=" + countryCode + "&at=" + applicationType;
         window.location.replace(passwordURL);
     }
 }

@@ -306,6 +306,10 @@
             }
         };
 
+        const bindTabEvents = (tabIndex) => {
+
+        };
+
         const load = () => {
             const currentStepEl = qs(SELECTORS.currentStep);
             const formConfigEl = qs(SELECTORS.formConfig);
