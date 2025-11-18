@@ -128,7 +128,7 @@
             const step = formConfig?.steps?.[0];
             if (step && Array.isArray(step.fields)) {
                 step.fields.forEach(function (UXField) {
-                    const fieldId = uxField.name;
+                    const fieldId = UXField.name;
                     if (UXField.visible && UXField.fieldType != "custom") {
                         var backendPropName = ElementMap[fieldId];
                         if (!backendPropName) return;
