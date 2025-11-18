@@ -11,22 +11,6 @@
 (() => {
     "use strict";
 
-    (function ($) {
-
-        $.fn.validateFields = function () {
-            SA_FIELDS.AttributeFields.forEach(field => {
-                if (field.IS_REQ === true) {
-                    var value = $("#" + field.ID).val();
-                    if (value == undefined || value == "") {
-                        console.warn("invalid value" + field.ID);
-                      
-                        return false;
-                    }
-                }
-            });
-        }
-        return true;
-    })(jquery);
     // ==========================
     // Constants & Selectors
     // ==========================
