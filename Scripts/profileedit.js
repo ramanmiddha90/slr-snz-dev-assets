@@ -90,6 +90,10 @@
 
             // Replace default click behavior
             const handler = function (e) {
+                if (!form.checkValidity()) {
+                    form.reportValidity(); // show field-level errors
+                    return;
+                }
                 e.preventDefault();                      // Stop default
                 e.stopImmediatePropagation();            // Stop internal B2C logic
                 //Native HTML validation
