@@ -1,55 +1,137 @@
 ﻿
-        // Ensure B2C API is available
+// Ensure B2C API is available
 
 
+(() => {
+    "use strict";
+//function BindEvents() {
+//    $("#btnConsent").click(function (e) {
+//        $("#lbl_pitcherURLError").hide();
+//        var portalURL = $("#passwordResetPortalUserURl").val();
 
-(function onPageReady() {
+//        if (portalURL != null && portalURL != undefined && portalURL != "")
+//            window.location.replace(portalURL);
+//        else {
+//            var NoPitcherFoundMessage = GetTranslationBasedOnCode("S-003");
+//            if (NoPitcherFoundMessage != undefined) {
+//                $("#lbl_pitcherURLError").text(NoPitcherFoundMessage);
+//            }
+//            $("#lbl_pitcherURLError").show();
 
-    var intervalHandle = setInterval(
-        function () {
-            if (window.pageReady) {
-                
-                if (HandleTabEvents) {
-                    HandleTabEvents(1);
-                    clearInterval(intervalHandle);
-                }
-            }
-        }, 50);
-}());
+//            e.preventDefault();
+//        }
+//    });
+//}
+//function GetTranslationBasedOnCode(code) {
+//    if ($("#ErrorMappings") != null) {
+//        var UI_Locales = $.parseJSON($("#ErrorMappings").val());
+//        UI_Locales.StatusMapping.forEach(function (error) {
+//            if (error.Code != undefined && error.Code == code) {
+//                message = error.Text;
+//                return false;
+//            }
+//        });
 
-const observer = new MutationObserver(function (mutations, obs) {
-    const form = document.querySelector('form');
-    const continueBtn = document.querySelector('#continue')
-        || document.querySelector('button[type="submit"]');
+//    }
+//    return message;
+//};
+// ==========================
+// Field loader (per-step)
+// ==========================
+const Fields = (() => {
+   
 
-    if (form && continueBtn) {
-        console.log("✅ Form and continue button found.");
-        obs.disconnect();
+    const applyUXField = (uxField) => {
+        if (!uxField) return;
 
-        // Replace default click behavior
-        const handler = function (e) {
-            e.preventDefault();                      // Stop default
-            e.stopImmediatePropagation();            // Stop internal B2C logic
-
-            // ✅ Native HTML validation
-            if (!form.checkValidity()) {
-                form.reportValidity(); // show field-level errors
+        const fieldId = uxField.name;
+       
+        try {
+            // custom block
+            if (uxField.fieldType === "custom") {
+                const el = qs(`#${uxField.name}`);
+                if (el && uxField.text != null) el.textContent = uxField.text;
                 return;
             }
 
-            console.log("✅ All checks passed. Resuming B2C submission...");
+            
+        } catch (e) {
+            console.log("Error loading Field:", uxField && uxField.name, e);
+        }
+    };
 
-            // 🔥 Remove the blocker listener and click the button to let B2C take over
-            continueBtn.removeEventListener('click', handler, true);
-            continueBtn.click(); // 👈 this triggers B2C’s real submission flow
-        };
+    const load = () => {
+        const formConfigEl = qs(SELECTORS.formConfig);
+        const formConfig = formConfigEl ? safeJSON(formConfigEl.value, {}) : {};
 
-        // Attach your handler using capture
-        continueBtn.addEventListener('click', handler, true);
-    }
-});
+        //hideAllAttrLis();
 
-observer.observe(document.body, {
-    childList: true,
-    subtree: true
-});
+        const step = formConfig?.steps?.[0];
+        if (step && Array.isArray(step.fields)) {
+            step.fields.forEach(applyUXField);
+        }
+
+        // keep compatibility with external function
+        if (typeof HandleTabEvents === "function") {
+            try { HandleTabEvents(1); } catch (err) { console.warn("HandleTabEvents failed", err); }
+        }
+    };
+
+    return { load };
+})();
+// ==========================
+// Boot logic with polling (B2C rendering can be delayed)
+// ==========================
+const Boot = (() => {
+    const POLL_MS = 50;
+    const TIMEOUT_MS = 15000; // fail-safe
+    let handle = null;
+    let startedAt = 0;
+
+    const continueBtnEl = () => qs(SELECTORS.continueBtn);
+
+    const ready = () => {
+        const el = continueBtnEl();
+        return Boolean(window.pageReady) && el && isVisible(el);
+    };
+
+    const tryInit = () => {
+        if (!ready()) {
+            if (Date.now() - startedAt > TIMEOUT_MS) {
+                clearInterval(handle);
+                handle = null;
+                // Soft fail: do nothing; page likely not in expected state.
+            }
+            return;
+        }
+        Fields.load();
+        if (handle) {
+            clearInterval(handle);
+            handle = null;
+        }
+    };
+
+    const start = () => {
+        startedAt = Date.now();
+        if (handle) clearInterval(handle);
+        handle = setInterval(tryInit, POLL_MS);
+    };
+
+    return { start };
+})();
+
+// ==========================
+// Public API (if needed elsewhere)
+// ==========================
+window.B2CPage = {
+    Fields,
+    Boot,
+};
+
+// Auto-start when DOM is ready (and still tolerate late rendering via polling)
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", Boot.start);
+} else {
+    Boot.start();
+}
+}) ();
