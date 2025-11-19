@@ -4,6 +4,28 @@
 
 (() => {
     "use strict";
+
+    const SELECTORS = Object.freeze({
+        continueBtn: "#continue",
+        cancelBtn: "#cancel",
+        customCancelBtn: "#customCancel",
+        countryDropdown: "#country",
+        passwordInput: "#newPassword",
+        passwordStrength: ".passwordStrength",
+        passwordStrengthFill: "#strength-fill",
+        ruleLength: "#rule-length",
+        ruleNumber: "#rule-number",
+        ruleSpecial: "#rule-special",
+        header: ".header",
+        dots: ".dots span",
+        queryParams: "#queryparams",
+        formConfig: "#FormConfig",
+        userInfo: "#userInfo",
+        currentStep: "#currentStep",
+        emailError: "#emailVerificationControl_error_message",
+        attrLis: ".attr li",
+        sendCodeBtn: "#emailVerificationControl_but_send_code",
+    });
 //function BindEvents() {
 //    $("#btnConsent").click(function (e) {
 //        $("#lbl_pitcherURLError").hide();
