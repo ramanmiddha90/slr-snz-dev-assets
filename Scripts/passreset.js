@@ -26,6 +26,10 @@
         attrLis: ".attr li",
         sendCodeBtn: "#emailVerificationControl_but_send_code",
     });
+    const safeJSON = (str, fallback = null) => {
+        try { return JSON.parse(str); } catch { return fallback; }
+    };
+    const qs = (sel, ctx = document) => ctx.querySelector(sel);
 //function BindEvents() {
 //    $("#btnConsent").click(function (e) {
 //        $("#lbl_pitcherURLError").hide();
