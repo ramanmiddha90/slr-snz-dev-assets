@@ -107,10 +107,10 @@ const Fields = (() => {
             step.fields.forEach(applyUXField);
         }
 
-        // keep compatibility with external function
-        if (typeof HandleTabEvents === "function") {
-            try { HandleTabEvents(1); } catch (err) { console.warn("HandleTabEvents failed", err); }
-        }
+        //// keep compatibility with external function
+        //if (typeof HandleTabEvents === "function") {
+        //    try { HandleTabEvents(1); } catch (err) { console.warn("HandleTabEvents failed", err); }
+        //}
     };
 
     return { load };
@@ -127,6 +127,12 @@ const Boot = (() => {
     const continueBtnEl = () => qs(SELECTORS.continueBtn);
 
     const ready = () => {
+        if (window.pageReady) {
+            // keep compatibility with external function
+            if (typeof HandleTabEvents === "function") {
+                try { HandleTabEvents(1); } catch (err) { console.warn("HandleTabEvents failed", err); }
+            }
+        }
         const el = continueBtnEl();
         return Boolean(window.pageReady) && el && isVisible(el);
     };
