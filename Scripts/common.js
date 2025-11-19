@@ -2,7 +2,7 @@
 // tabIndex =0 - PE
 // tabIndex =1 - PR
 var PE_POLICY = "B2C_1A_SLR_SNZ_PE";
-var PR_POLICY = "B2C_1A_SOLAR_SANDOZID_PROD_PWRESET";
+var PR_POLICY = "B2C_1A_SLR_SNZ_PE_PASSRESET";
 function HandleTabEvents(tabIndex = 1) {
     if (tabIndex == 1) {
         // Remove 'active' class from first tab and pane
