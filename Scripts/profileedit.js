@@ -186,7 +186,7 @@
                 var domain = "https://fa-solar-apis.azurewebsites.net/api";
             }
             var url = domain + "/solar/users/" + userAccountId;
-            makeApiCall(url, 'POST', headers, updateDCRRqequest)
+            makeApiCall(url, 'POST', headers, updateDCRRequest)
                 .then(data => {
                     console.log('POST Data:', data);
                     $("#lblPESuccess").show();
