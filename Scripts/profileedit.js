@@ -171,6 +171,7 @@
     // ==========================
     const DCRPRocessor = (() => {
         const Process = () => {
+            const uiEl = qs(SELECTORS.userInfo);
             const userInfo = uiEl ? safeJSON(uiEl.value, {}) : {};
             const userAccountId = userInfo.Id
             const updateDCRRequest = GenerateUpdateRequest(userInfo);
@@ -206,7 +207,7 @@
             const Attribute = {};
 
             const qpEl = qs(SELECTORS.queryParams);
-            const uiEl = qs(SELECTORS.userInfo);
+          
             const formConfigEl = qs(SELECTORS.formConfig);
 
             const queryparams = qpEl ? safeJSON(qpEl.value, {}) : {};
