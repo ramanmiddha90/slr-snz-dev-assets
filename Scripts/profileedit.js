@@ -171,11 +171,37 @@
     // ==========================
     const DCRPRocessor = (() => {
         const Process = () => {
-            const updateDCRRequest = GenerateUpdateRequest();
+            const userInfo = uiEl ? safeJSON(uiEl.value, {}) : {};
+            const userAccountId = userInfo.Id
+            const updateDCRRequest = GenerateUpdateRequest(userInfo);
+            var accessToken = "";
+            const headers = {
+                'Authorization': 'Bearer' + accessToken
+            };
+
+            var domain = "https://fa-solar-dev-apis.azurewebsites.net/api";
+            if (!window.location.origin.incudes("sandozdevb2c")) {
+
+                var domain = "https://fa-solar-apis.azurewebsites.net/api";
+            }
+            var url = domain + "/solar/users/" + userAccountId;
+            makeApiCall(url, 'POST', headers, updateDCRRqequest)
+                .then(data => {
+                    console.log('POST Data:', data);
+                    $("#lblPESuccess").show();
+
+                })
+                .catch(error => {
+                    console.error('Error in POST request:', error);
+                    $("#lblPESuccess").show();
+                    $("#lblPESuccess").css("color", 'red');
+                    $("#lblPESuccess").text("Unable to submit the request due to some internal error. Please try again!")
+                });
+
             console.log(JSON.stringify(updateDCRRequest));
         };
 
-        const GenerateUpdateRequest = () => {
+        const GenerateUpdateRequest = (userInfo) => {
             const updateDCRBody = {};
             const Attribute = {};
 
@@ -184,7 +210,7 @@
             const formConfigEl = qs(SELECTORS.formConfig);
 
             const queryparams = qpEl ? safeJSON(qpEl.value, {}) : {};
-            const userInfo = uiEl ? safeJSON(uiEl.value, {}) : {};
+
             const formConfig = formConfigEl ? safeJSON(formConfigEl.value, {}) : {};
 
             const step = formConfig?.steps?.[0];
@@ -215,11 +241,11 @@
                 });
             }
 
+            Attribute["PersonEmail"] = userInfo.PersonEmail ?? "";
             updateDCRBody["Attribute"] = Attribute;
             updateDCRBody["B2CId"] = (userInfo && userInfo.SCT_Azure_B2C_Id__c) ? userInfo.SCT_Azure_B2C_Id__c : "";
             updateDCRBody["CountryCode"] = queryparams.countryCode ?? "";
             updateDCRBody["ApplicationType"] = queryparams.applicationType ?? "HCP";
-            updateDCRBody["Attribute.PersonEmail"] = userInfo.PersonEmail ?? "";
 
             return updateDCRBody;
         };
