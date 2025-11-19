@@ -30,6 +30,16 @@
         try { return JSON.parse(str); } catch { return fallback; }
     };
     const qs = (sel, ctx = document) => ctx.querySelector(sel);
+
+    const isVisible = (el) => {
+        if (!el) return false;
+        // visible if in document and not display:none and not visibility:hidden and has non-zero size or visible via CSS
+        const style = getComputedStyle(el);
+        if (style.display === "none" || style.visibility === "hidden" || style.opacity === "0") return false;
+        // offsetParent covers display:none; for fixed/absolute elements offsetParent may be null so also check bounding rect
+        const rect = el.getBoundingClientRect();
+        return (rect.width > 0 && rect.height > 0) || el.offsetParent !== null;
+    };
 //function BindEvents() {
 //    $("#btnConsent").click(function (e) {
 //        $("#lbl_pitcherURLError").hide();
