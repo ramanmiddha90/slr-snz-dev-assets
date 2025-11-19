@@ -181,7 +181,7 @@
             };
 
             var domain = "https://fa-solar-dev-apis.azurewebsites.net/api";
-            if (!window.location.origin.incudes("sandozdevb2c")) {
+            if (!window.location.origin.includes("sandozdevb2c")) {
 
                 var domain = "https://fa-solar-apis.azurewebsites.net/api";
             }
