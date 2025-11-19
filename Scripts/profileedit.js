@@ -271,7 +271,7 @@
 
             try {
                 // custom block
-                if (uxField.fieldType === "custom" && uxField.visible) {
+                if (uxField.fieldType === "custom") {
                     const el = qs(`#${uxField.name}`);
                     if (el && uxField.text != null) el.textContent = uxField.text;
                     return;
