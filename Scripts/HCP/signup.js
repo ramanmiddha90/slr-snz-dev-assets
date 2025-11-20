@@ -329,11 +329,11 @@
                 $('.select2-selection__arrow').css('transform', 'rotate(0deg)');
             });
 
-            // Enable/disable button based on selection
-            const $continueBtn = $('#continue').prop('disabled', true);
-            $('#country').on('change', function () {
-                $continueBtn.prop('disabled', !$(this).val());
-            });
+            //// Enable/disable button based on selection
+            ////const $continueBtn = $('#continue').prop('disabled', true);
+            //$('#country').on('change', function () {
+            //    $continueBtn.prop('disabled', !$(this).val());
+            //});
         });
     });
     // ==========================
