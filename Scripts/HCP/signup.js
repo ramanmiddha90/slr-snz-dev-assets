@@ -251,9 +251,15 @@
 
 
     const LoadDDStyle = ((fieldId) => {
+
+        $("select").forEach(sel => {
+
+            var idSelector = "#"+sel.id;
+            var idSelectorLabel = "#" + sel.id +"_label";
+
             console.log('Select2 loaded!');
             // Initialize Select2
-            $('#country').select2({
+            $(idSelector).select2({
                 //placeholder: 'Select a country',
                 templateResult: formatOption,
                 templateSelection: formatOption,
@@ -270,9 +276,9 @@
             }
 
             // Dropdown open styling and positioning
-            $('#country').on('select2:open', function () {
+            $(idSelector).on('select2:open', function () {
                 const $dropdown = $('.select2-dropdown');
-                const $container = $('#country_label');
+                const $container = $(idSelectorLabel);
                 const inputHeight = $container.find('.select2').outerHeight();
 
                 // Lock dropdown position
@@ -295,7 +301,7 @@
                 observer.observe($dropdown[0], { attributes: true, attributeFilter: ['style'] });
 
                 // Stop observing on close
-                $('#country').one('select2:closing', () => observer.disconnect());
+                $(idSelector).one('select2:closing', () => observer.disconnect());
 
                 // Add search icon if not present
                 const searchField = $('.select2-search__field');
@@ -305,7 +311,7 @@
                 }
 
                 // Update placeholder and dropdown style
-                searchField.attr('placeholder', 'Search your Country');
+                //searchField.attr('placeholder', 'Search your Country');
                 $('.select2-dropdown').css({
                     'border': '1px solid var(--grey-300)',
                     'border-radius': '8px',
@@ -317,10 +323,10 @@
             });
 
             // Reset arrow rotation on close
-            $('#country').on('select2:close', function () {
+            $(idSelector).on('select2:close', function () {
                 $('.select2-selection__arrow').css('transform', 'rotate(0deg)');
             });
-
+        });
             
     });
     // ==========================
