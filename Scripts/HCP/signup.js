@@ -258,6 +258,8 @@
                 var idSelector = "#" + $(this).attr("id");
                 var idSelectorLabel = idSelector + "_label";
 
+                if ($(this).attr("id") != "country")
+                    return;
                 console.log('Select2 loaded!');
                 // Initialize Select2
                 $(idSelector).select2({
