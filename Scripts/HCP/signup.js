@@ -252,10 +252,10 @@
 
     const LoadDDStyle = ((fieldId) => {
 
-        $("select").forEach(sel => {
+        $("select").each(function () {
 
-            var idSelector = "#"+sel.id;
-            var idSelectorLabel = "#" + sel.id +"_label";
+            var idSelector = "#" + $(this).attr(id);
+            var idSelectorLabel = idSelector + "_label";
 
             console.log('Select2 loaded!');
             // Initialize Select2
@@ -327,7 +327,7 @@
                 $('.select2-selection__arrow').css('transform', 'rotate(0deg)');
             });
         });
-            
+
     });
     // ==========================
     // Configuration checks
@@ -380,8 +380,8 @@
         }
 
         const applyUXField = (uxField) => {
-           
-          
+
+
             if (!uxField) return;
 
             const fieldId = uxField.name;
@@ -397,7 +397,7 @@
                     }
                     return;
                 }
-                    
+
                 if (uxField.visible) {
                     // required mark + SA_FIELDS back-compat
                     if (uxField.required && window.SA_FIELDS && Array.isArray(window.SA_FIELDS.AttributeFields)) {
