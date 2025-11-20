@@ -587,11 +587,14 @@ legend {
 .verificationControlContent .buttons {
     margin-bottom: 24px;
 }
-
+/*
 button {
     margin: 0px !important;
-}
+}*/
 
+button {
+    margin: 0 16px 0 0 !important;
+}
 /* Feb 12, 2025 */
 
 html {
