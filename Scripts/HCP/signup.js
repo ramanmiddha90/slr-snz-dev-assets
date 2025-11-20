@@ -249,6 +249,93 @@
         return { arrange, attachCancelHandler };
     })();
 
+
+    const LoadDDStyle = (() => {
+        $('<link>', {
+            rel: 'stylesheet',
+            href: 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'
+        }).appendTo('head');
+
+        // Load Select2 JS dynamically
+        $.getScript('https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', function () {
+            console.log('Select2 loaded!');
+
+            // Initialize Select2
+            $('#country').select2({
+                placeholder: 'Select a country',
+                templateResult: formatOption,
+                templateSelection: formatOption,
+                dropdownParent: $('.DropdownSingleSelect')
+            });
+
+            // Custom option formatting (if data-icon exists)
+            function formatOption(option) {
+                if (!option.id) return option.text;
+                const icon = $(option.element).data('icon');
+                return icon
+                    ? $('<span><img src="' + icon + '" style="width:20px;height:14px;margin-right:8px;">' + option.text + '</span>')
+                    : option.text;
+            }
+
+            // Dropdown open styling and positioning
+            $('#country').on('select2:open', function () {
+                const $dropdown = $('.select2-dropdown');
+                const $container = $('#country_label');
+                const inputHeight = $container.find('.select2').outerHeight();
+
+                // Lock dropdown position
+                $dropdown.css({
+                    position: 'absolute',
+                    top: (inputHeight - 10) + 'px',
+                    left: 0,
+                    width: $container.find('.select2').outerWidth() + 'px'
+                });
+
+                // Observe style changes
+                const observer = new MutationObserver(() => {
+                    $dropdown.css({
+                        position: 'absolute',
+                        top: (inputHeight - 10) + 'px',
+                        left: 0,
+                        width: $container.find('.select2').outerWidth() + 'px'
+                    });
+                });
+                observer.observe($dropdown[0], { attributes: true, attributeFilter: ['style'] });
+
+                // Stop observing on close
+                $('#country').one('select2:closing', () => observer.disconnect());
+
+                // Add search icon if not present
+                const searchField = $('.select2-search__field');
+                if (!searchField.next('.search-icon').length) {
+                    searchField.after('<span class="search-icon" style="position:absolute; right:15px; top:40%; transform:translateY(-50%); width:22px; height:22px; background:url(https://slr-snz-dev-assets.pages.dev/objects/search.svg) no-repeat center; background-size:22px;"></span>');
+                    $('.select2-search').css('position', 'relative');
+                }
+
+                // Update placeholder and dropdown style
+                searchField.attr('placeholder', 'Search your Country');
+                $('.select2-dropdown').css({
+                    'border': '1px solid var(--grey-300)',
+                    'border-radius': '8px',
+                    'box-shadow': '0 2px 6px 0 rgba(0, 0, 0, 0.15)'
+                });
+
+                // Rotate arrow
+                $('.select2-selection__arrow').css('transform', 'rotate(180deg)');
+            });
+
+            // Reset arrow rotation on close
+            $('#country').on('select2:close', function () {
+                $('.select2-selection__arrow').css('transform', 'rotate(0deg)');
+            });
+
+            // Enable/disable button based on selection
+            const $continueBtn = $('#continue').prop('disabled', true);
+            $('#country').on('change', function () {
+                $continueBtn.prop('disabled', !$(this).val());
+            });
+        });
+    });
     // ==========================
     // Configuration checks
     // ==========================
@@ -315,7 +402,9 @@
                         if (idx >= 0) {
                             window.SA_FIELDS.AttributeFields[idx].IS_REQ = true;
                             const $label = $(fieldAttrLabelId);
-                            $label.text($label.text() + "*");
+                            var html = $label.html().replace('*', '<span class="star">*</span>');
+                            $label.html(html);
+                            //$label.text($label.text() + "*");
                         }
                     }
 
@@ -402,6 +491,7 @@
             }
 
             UI.arrange();
+            LoadDDStyle();
             Fields.load();
             UI.attachCancelHandler();
             clearInterval(handle);
