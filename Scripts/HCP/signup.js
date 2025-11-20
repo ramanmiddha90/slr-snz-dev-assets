@@ -412,9 +412,9 @@
                         if (idx >= 0) {
                             window.SA_FIELDS.AttributeFields[idx].IS_REQ = true;
                             const $label = $(fieldAttrLabelId);
+                            $label.text($label.text() + "*");
                             var html = $label.html().replace('*', '<span class="star">*</span>');
                             $label.html(html);
-                            //$label.text($label.text() + "*");
                         }
                     }
 
