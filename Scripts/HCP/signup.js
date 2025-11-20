@@ -376,6 +376,16 @@
             qsa(SELECTORS.attrLis).forEach((li) => { li.style.display = "none"; });
         };
 
+        const SetRequiredFields = () => {
+            $('label.required').each(function () {
+
+                // Replace the star with a span for styling
+                var html = $(this).html().replace('*', '<span class="star">*</span>');
+                $(this).html(html);
+
+            });
+        }
+
         const applyUXField = (uxField) => {
            
           
