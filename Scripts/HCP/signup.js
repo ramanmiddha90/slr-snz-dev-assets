@@ -255,7 +255,7 @@
         try {
             $("select").each(function () {
 
-                var idSelector = "#" + $(this).attr(id);
+                var idSelector = "#" + $(this).attr("id");
                 var idSelectorLabel = idSelector + "_label";
 
                 console.log('Select2 loaded!');
