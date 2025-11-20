@@ -489,8 +489,8 @@
             }
 
             UI.arrange();
-            LoadDDStyle();
             Fields.load();
+            LoadDDStyle();
             UI.attachCancelHandler();
             clearInterval(handle);
         };
