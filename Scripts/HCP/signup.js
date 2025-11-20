@@ -250,19 +250,11 @@
     })();
 
 
-    const LoadDDStyle = (() => {
-        $('<link>', {
-            rel: 'stylesheet',
-            href: 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css'
-        }).appendTo('head');
-
-        // Load Select2 JS dynamically
-        $.getScript('https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', function () {
+    const LoadDDStyle = ((fieldId) => {
             console.log('Select2 loaded!');
-
             // Initialize Select2
             $('#country').select2({
-                placeholder: 'Select a country',
+                //placeholder: 'Select a country',
                 templateResult: formatOption,
                 templateSelection: formatOption,
                 dropdownParent: $('.DropdownSingleSelect')
@@ -329,12 +321,7 @@
                 $('.select2-selection__arrow').css('transform', 'rotate(0deg)');
             });
 
-            //// Enable/disable button based on selection
-            ////const $continueBtn = $('#continue').prop('disabled', true);
-            //$('#country').on('change', function () {
-            //    $continueBtn.prop('disabled', !$(this).val());
-            //});
-        });
+            
     });
     // ==========================
     // Configuration checks
