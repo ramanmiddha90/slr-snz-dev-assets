@@ -404,7 +404,7 @@
                     }
                     return;
                 }
-
+                    
                 if (uxField.visible) {
                     // required mark + SA_FIELDS back-compat
                     if (uxField.required && window.SA_FIELDS && Array.isArray(window.SA_FIELDS.AttributeFields)) {
