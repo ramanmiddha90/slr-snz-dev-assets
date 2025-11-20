@@ -470,6 +470,7 @@
                 hideAllAttrLis();
             }
 
+            SetRequiredFields();
             const step = formConfig?.steps?.[currentStep];
             if (step && Array.isArray(step.fields)) {
                 step.fields.forEach(applyUXField);
