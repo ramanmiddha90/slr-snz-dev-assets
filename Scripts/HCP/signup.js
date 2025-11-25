@@ -150,8 +150,11 @@
             });
 
             container.appendChild(toggleBtn);
-            passwordRefernceInput.value=input.value;
-            function onInput() { validate(input.value); }
+           
+            function onInput() {
+                passwordRefernceInput.value = input.value;
+                validate(input.value);
+            }
             input.addEventListener("input", onInput);
         };
 
