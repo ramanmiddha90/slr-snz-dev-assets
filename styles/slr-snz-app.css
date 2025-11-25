@@ -834,7 +834,7 @@ label {
     color: var(--grey-500);
     font-size: 16px;
     font-weight: 400;
-    text-transform: capitalize;
+   /* text-transform: capitalize;*/
     font-family: "Futura Now Text", arial;
 }
 
