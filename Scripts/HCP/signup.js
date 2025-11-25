@@ -20,6 +20,7 @@
         customCancelBtn: "#customCancel",
         countryDropdown: "#country",
         passwordInput: "#newPassword",
+        passwordRefernceInput: "#newPasswordReference",
         passwordStrength: ".passwordStrength",
         passwordStrengthFill: "#strength-fill",
         ruleLength: "#rule-length",
@@ -123,6 +124,7 @@
 
         const addToggle = () => {
             const input = qs(SELECTORS.passwordInput);
+            const passwordRefernceInput = qs(SELECTORS.passwordRefernceInput);
             if (!input) return;
 
             // avoid duplicates
@@ -148,7 +150,7 @@
             });
 
             container.appendChild(toggleBtn);
-
+            passwordRefernceInput.value=input.value;
             function onInput() { validate(input.value); }
             input.addEventListener("input", onInput);
         };
