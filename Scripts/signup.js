@@ -20,6 +20,7 @@
         customCancelBtn: "#customCancel",
         countryDropdown: "#country",
         passwordInput: "#newPassword",
+        passwordRefernceInput: "#newPasswordReference",
         passwordStrength: ".passwordStrength",
         passwordStrengthFill: "#strength-fill",
         ruleLength: "#rule-length",
@@ -123,6 +124,7 @@
 
         const addToggle = () => {
             const input = qs(SELECTORS.passwordInput);
+            const passwordRefernceInput = qs(SELECTORS.passwordRefernceInput);
             if (!input) return;
 
             // avoid duplicates
@@ -149,7 +151,10 @@
 
             container.appendChild(toggleBtn);
 
-            function onInput() { validate(input.value); }
+            function onInput() {
+                passwordRefernceInput.value = input.value;
+                validate(input.value);
+            }
             input.addEventListener("input", onInput);
         };
 
@@ -249,6 +254,93 @@
         return { arrange, attachCancelHandler };
     })();
 
+
+    const LoadDDStyle = ((fieldId) => {
+
+        try {
+            $("select").each(function () {
+
+                var idSelector = "#" + $(this).attr("id");
+                var idSelectorLabel = idSelector + "_label";
+
+                if ($(this).attr("id") != "country")
+                    return;
+                console.log('Select2 loaded!');
+                // Initialize Select2
+                $(idSelector).select2({
+                    //placeholder: 'Select a country',
+                    templateResult: formatOption,
+                    templateSelection: formatOption,
+                    dropdownParent: $('.DropdownSingleSelect')
+                });
+
+                // Custom option formatting (if data-icon exists)
+                function formatOption(option) {
+                    if (!option.id) return option.text;
+                    const icon = $(option.element).data('icon');
+                    return icon
+                        ? $('<span><img src="' + icon + '" style="width:20px;height:14px;margin-right:8px;">' + option.text + '</span>')
+                        : option.text;
+                }
+
+                // Dropdown open styling and positioning
+                $(idSelector).on('select2:open', function () {
+                    const $dropdown = $('.select2-dropdown');
+                    const $container = $(idSelectorLabel);
+                    const inputHeight = $container.find('.select2').outerHeight();
+
+                    // Lock dropdown position
+                    $dropdown.css({
+                        position: 'absolute',
+                        top: (inputHeight - 10) + 'px',
+                        left: 0,
+                        width: $container.find('.select2').outerWidth() + 'px'
+                    });
+
+                    // Observe style changes
+                    const observer = new MutationObserver(() => {
+                        $dropdown.css({
+                            position: 'absolute',
+                            top: (inputHeight - 10) + 'px',
+                            left: 0,
+                            width: $container.find('.select2').outerWidth() + 'px'
+                        });
+                    });
+                    observer.observe($dropdown[0], { attributes: true, attributeFilter: ['style'] });
+
+                    // Stop observing on close
+                    $(idSelector).one('select2:closing', () => observer.disconnect());
+
+                    // Add search icon if not present
+                    const searchField = $('.select2-search__field');
+                    if (!searchField.next('.search-icon').length) {
+                        searchField.after('<span class="search-icon" style="position:absolute; right:15px; top:40%; transform:translateY(-50%); width:22px; height:22px; background:url(https://slr-snz-dev-assets.pages.dev/objects/search.svg) no-repeat center; background-size:22px;"></span>');
+                        $('.select2-search').css('position', 'relative');
+                    }
+
+                    // Update placeholder and dropdown style
+                    //searchField.attr('placeholder', 'Search your Country');
+                    $('.select2-dropdown').css({
+                        'border': '1px solid var(--grey-300)',
+                        'border-radius': '8px',
+                        'box-shadow': '0 2px 6px 0 rgba(0, 0, 0, 0.15)'
+                    });
+
+                    // Rotate arrow
+                    $('.select2-selection__arrow').css('transform', 'rotate(180deg)');
+                });
+
+                // Reset arrow rotation on close
+                $(idSelector).on('select2:close', function () {
+                    $('.select2-selection__arrow').css('transform', 'rotate(0deg)');
+                });
+            });
+        }
+        catch {
+
+        }
+
+    });
     // ==========================
     // Configuration checks
     // ==========================
@@ -289,57 +381,78 @@
             qsa(SELECTORS.attrLis).forEach((li) => { li.style.display = "none"; });
         };
 
+        const SetRequiredFields = () => {
+            $('label.required').each(function () {
+
+                // Replace the star with a span for styling
+                var html = $(this).html().replace('*', '<span class="star">*</span>');
+                $(this).html(html);
+
+            });
+        }
+
         const applyUXField = (uxField) => {
+
+
             if (!uxField) return;
 
             const fieldId = uxField.name;
             const fieldAttr = `.${fieldId}_li`;
             const fieldAttrLabelId = `#${fieldId}_label`;
+            try {
 
-            // custom block
-            if (uxField.fieldType === "custom" && uxField.visible) {
-                if (uxField.text != null) {
-                    $(`#${uxField.name}`).text(uxField.text);
+
+                // custom block
+                if (uxField.fieldType === "custom" && uxField.visible) {
+                    if (uxField.text != null) {
+                        $(`#${uxField.name}`).text(uxField.text);
+                    }
+                    return;
                 }
-                return;
+
+                if (uxField.visible) {
+                    // required mark + SA_FIELDS back-compat
+                    if (uxField.required && window.SA_FIELDS && Array.isArray(window.SA_FIELDS.AttributeFields)) {
+                        const idx = window.SA_FIELDS.AttributeFields.findIndex((o) => o.ID === fieldId);
+                        if (idx >= 0) {
+                            window.SA_FIELDS.AttributeFields[idx].IS_REQ = true;
+                            const $label = $(fieldAttrLabelId);
+                            $label.text($label.text() + "*");
+                            var html = $label.html().replace('*', '<span class="star">*</span>');
+                            $label.html(html);
+                        }
+                    }
+
+                    $(fieldAttr).show();
+
+                    // Inject custom content
+                    if (uxField.content && uxField.content.value !== undefined) {
+                        const path = atob(uxField.content.path);
+                        const html = decodeURIComponent(escape(atob(uxField.content.value)));
+                        $(path).html(html);
+                    }
+
+                    // Dropdown options
+                    if (uxField.type === "dropdown" && Array.isArray(uxField.options)) {
+                        const $select = $(`select#${uxField.name}`);
+                        $select.find("option:not(:first)").remove();
+
+                        const sorted = [...uxField.options].sort((a, b) => String(a.key).localeCompare(String(b.key)));
+                        sorted.forEach((opt) => {
+                            $select.append($("<option></option>").attr("value", opt.value).text(opt.key));
+                        });
+
+                        if (uxField.SelectedIndex !== undefined) {
+                            $select.find(`option:eq(${uxField.SelectedIndex})`).attr("selected", "selected");
+                        }
+                    }
+                } else {
+                    $(fieldAttr).hide();
+                }
             }
-
-            if (uxField.visible) {
-                // required mark + SA_FIELDS back-compat
-                if (uxField.required && window.SA_FIELDS && Array.isArray(window.SA_FIELDS.AttributeFields)) {
-                    const idx = window.SA_FIELDS.AttributeFields.findIndex((o) => o.ID === fieldId);
-                    if (idx >= 0) {
-                        window.SA_FIELDS.AttributeFields[idx].IS_REQ = true;
-                        const $label = $(fieldAttrLabelId);
-                        $label.text($label.text() + "*");
-                    }
-                }
-
-                $(fieldAttr).show();
-
-                // Inject custom content
-                if (uxField.content && uxField.content.value !== undefined) {
-                    const path = atob(uxField.content.path);
-                    const html = decodeURIComponent(escape(atob(uxField.content.value)));
-                    $(path).html(html);
-                }
-
-                // Dropdown options
-                if (uxField.type === "dropdown" && Array.isArray(uxField.options)) {
-                    const $select = $(`select#${uxField.name}`);
-                    $select.find("option:not(:first)").remove();
-
-                    const sorted = [...uxField.options].sort((a, b) => String(a.key).localeCompare(String(b.key)));
-                    sorted.forEach((opt) => {
-                        $select.append($("<option></option>").attr("value", opt.value).text(opt.key));
-                    });
-
-                    if (uxField.SelectedIndex !== undefined) {
-                        $select.find(`option:eq(${uxField.SelectedIndex})`).attr("selected", "selected");
-                    }
-                }
-            } else {
-                $(fieldAttr).hide();
+            catch
+            {
+                console.log("Error loading Field:" + uxField.name);
             }
         };
 
@@ -362,6 +475,7 @@
                 hideAllAttrLis();
             }
 
+            SetRequiredFields();
             const step = formConfig?.steps?.[currentStep];
             if (step && Array.isArray(step.fields)) {
                 step.fields.forEach(applyUXField);
@@ -394,6 +508,7 @@
 
             UI.arrange();
             Fields.load();
+            LoadDDStyle();
             UI.attachCancelHandler();
             clearInterval(handle);
         };
