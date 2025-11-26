@@ -340,6 +340,13 @@ fieldset {
 #passwordResetPortalUserURl, #IDPName_label, #IDPName, #lbl_pitcherURLError, #queryparams_label, #queryparams, #AccessToken, #AccessToken_label {
     display: none;
 }
+#cancel,
+#currentStep,
+#newPasswordReference,
+#newPasswordReference_label,
+#currentStep_label, #TnCPolicy_label, #TnCsEmailandNotifiation_label, #TnCsAck_label {
+    display: none;
+}
 
 #lbl_pitcherURLError {
     color: red;
