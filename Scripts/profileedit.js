@@ -18,6 +18,7 @@
         continueBtn: "#continue",
         cancelBtn: "#cancel",
         customCancelBtn: "#customCancel",
+        consentBtn: "#btnConsent",
         countryDropdown: "#country",
         passwordInput: "#newPassword",
         passwordStrength: ".passwordStrength",
@@ -33,6 +34,7 @@
         currentStep: "#currentStep",
         emailError: "#emailVerificationControl_error_message",
         attrLis: ".attr li",
+
         sendCodeBtn: "#emailVerificationControl_but_send_code",
     });
 
@@ -137,6 +139,22 @@
                 e.preventDefault();
                 e.stopImmediatePropagation();
             };
+            const consentHandler = (e) => {
+                $("#lbl_pitcherURLError").hide();
+                if ($("#userInfo").length > 0) {
+                    var portalURL = JSON.parse($("#userInfo").val()).PITCHER__Portal_URL__c;
+                    if (portalURL != null && portalURL != undefined && portalURL != "")
+                        window.location.replace(portalURL);
+                    else {
+                        //var NoPitcherFoundMessage = GetTranslationBasedOnCode("S-003");
+                        //if (NoPitcherFoundMessage != undefined) {
+                        //    $("#lbl_pitcherURLError").text(NoPitcherFoundMessage);
+                        //}
+                        $("#lbl_pitcherURLError").show();
+                        e.preventDefault();
+                    }
+                }
+            }
 
             const handler = (e) => {
                 e.preventDefault();
@@ -158,6 +176,7 @@
 
             continueBtn.addEventListener('click', handler, { capture: true });
             if (cancelBtn) cancelBtn.addEventListener('click', cancelHandler, { capture: true });
+            if (consentBtn) consentBtn.addEventListener('click', consentHandler, { capture: true });
         }
     });
 
