@@ -262,6 +262,8 @@
     // Field loader (per-step)
     // ==========================
     const Fields = (() => {
+
+        const consentBtn = qs(SELECTORS.consentBtn);
         const hideAllAttrLis = () => {
             setDisplayBySelector(SELECTORS.attrLis, false);
         };
