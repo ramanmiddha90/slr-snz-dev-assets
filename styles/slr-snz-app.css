@@ -869,16 +869,20 @@ input {
 input[type="checkbox"] {
     position: relative;
     height: 18px !important;
-    width: 18px !important;
+    width: 15px !important;
     background-color: var(--white) !important;
     border: 1px solid var(--grey-500) !important;
     border-radius: 4px !important;
     margin-right: 12px !important;
     flex-shrink: 0 !important;
-    appearance: none; /* Removes default checkbox styling */
+    /* appearance: none; */
     cursor: pointer;
+    min-width: 18px !important;
+    margin-top: 6px;
 }
-
+fieldset{
+    display:flex;
+}
 .intro p {
     color: var(--grey-500) !important;
     text-align: center !important;
