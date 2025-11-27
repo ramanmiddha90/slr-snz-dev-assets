@@ -139,22 +139,7 @@
                 e.preventDefault();
                 e.stopImmediatePropagation();
             };
-            const consentHandler = (e) => {
-                $("#lbl_pitcherURLError").hide();
-                if ($("#userInfo").length > 0) {
-                    var portalURL = JSON.parse($("#userInfo").val()).PITCHER__Portal_URL__c;
-                    if (portalURL != null && portalURL != undefined && portalURL != "")
-                        window.location.replace(portalURL);
-                    else {
-                        //var NoPitcherFoundMessage = GetTranslationBasedOnCode("S-003");
-                        //if (NoPitcherFoundMessage != undefined) {
-                        //    $("#lbl_pitcherURLError").text(NoPitcherFoundMessage);
-                        //}
-                        $("#lbl_pitcherURLError").show();
-                        e.preventDefault();
-                    }
-                }
-            }
+          
 
             const handler = (e) => {
                 e.preventDefault();
@@ -176,7 +161,7 @@
 
             continueBtn.addEventListener('click', handler, { capture: true });
             if (cancelBtn) cancelBtn.addEventListener('click', cancelHandler, { capture: true });
-            if (consentBtn) consentBtn.addEventListener('click', consentHandler, { capture: true });
+         
         }
     });
 
@@ -280,7 +265,24 @@
         const hideAllAttrLis = () => {
             setDisplayBySelector(SELECTORS.attrLis, false);
         };
+        const consentHandler = (e) => {
+            $("#lbl_pitcherURLError").hide();
+            if ($("#userInfo").length > 0) {
+                var portalURL = JSON.parse($("#userInfo").val()).PITCHER__Portal_URL__c;
+                if (portalURL != null && portalURL != undefined && portalURL != "")
+                    window.location.replace(portalURL);
+                else {
+                    //var NoPitcherFoundMessage = GetTranslationBasedOnCode("S-003");
+                    //if (NoPitcherFoundMessage != undefined) {
+                    //    $("#lbl_pitcherURLError").text(NoPitcherFoundMessage);
+                    //}
+                    $("#lbl_pitcherURLError").show();
+                    e.preventDefault();
+                }
+            }
+        };
 
+        if (consentBtn) consentBtn.addEventListener('click', consentHandler, { capture: true });
         const applyUXField = (uxField) => {
             if (!uxField) return;
 
