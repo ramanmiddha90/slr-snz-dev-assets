@@ -8,6 +8,7 @@
     const SELECTORS = Object.freeze({
         continueBtn: "#continue",
         cancelBtn: "#cancel",
+        consentBtn: "#btnConsent",
         customCancelBtn: "#customCancel",
         countryDropdown: "#country",
         passwordInput: "#newPassword",
@@ -76,12 +77,25 @@
 // ==========================
 const Fields = (() => {
    
-
+    const consentBtn = qs(SELECTORS.consentBtn);
     const applyUXField = (uxField) => {
         if (!uxField) return;
 
         const fieldId = uxField.name;
-       
+        const consentHandler = (e) => {
+            $("#lbl_pitcherURLError").hide();
+            if ($("#userInfo").length > 0) {
+                var portalURL = JSON.parse($("#userInfo").val()).PITCHER__Portal_URL__c;
+                if (portalURL != null && portalURL != undefined && portalURL != "")
+                    window.location.replace(portalURL);
+                else {
+                 
+                    $("#lbl_pitcherURLError").show();
+                    e.preventDefault();
+                }
+            }
+        };
+        if (consentBtn) consentBtn.addEventListener('click', consentHandler, { capture: true });
         try {
             // custom block
             if (uxField.fieldType === "custom") {
