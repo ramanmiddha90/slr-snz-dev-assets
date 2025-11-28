@@ -89,10 +89,14 @@ const Fields = (() => {
                 if (portalURL != null && portalURL != undefined && portalURL != "")
                     window.location.replace(portalURL);
                 else {
-                 
+
                     $("#lbl_pitcherURLError").show();
                     e.preventDefault();
                 }
+            }
+            else {
+                $("#lbl_pitcherURLError").show();
+                e.preventDefault();
             }
         };
         if (consentBtn) consentBtn.addEventListener('click', consentHandler, { capture: true });
