@@ -282,6 +282,10 @@
                     e.preventDefault();
                 }
             }
+            else {
+                $("#lbl_pitcherURLError").show();
+                e.preventDefault();
+            }
         };
 
         if (consentBtn) consentBtn.addEventListener('click', consentHandler, { capture: true });
