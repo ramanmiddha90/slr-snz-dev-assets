@@ -274,10 +274,7 @@
                 if (portalURL != null && portalURL != undefined && portalURL != "")
                     window.location.replace(portalURL);
                 else {
-                    //var NoPitcherFoundMessage = GetTranslationBasedOnCode("S-003");
-                    //if (NoPitcherFoundMessage != undefined) {
-                    //    $("#lbl_pitcherURLError").text(NoPitcherFoundMessage);
-                    //}
+                   
                     $("#lbl_pitcherURLError").show();
                     e.preventDefault();
                 }
