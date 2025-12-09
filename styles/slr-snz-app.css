@@ -815,7 +815,7 @@ button[type="submit"] {
 
 #cancel,
 #currentStep,
-#currentStep_label {
+#currentStep_label, profilingConsent_label {
     display: none;
 }
 
