@@ -881,23 +881,24 @@ input[type="checkbox"] {
     margin-top: 6px;
 }
 fieldset {
-    display: flex;
-    flex-direction: column; /* stack items vertically */
+    display: grid !important;
+    grid-template-columns: auto 1fr !important; /* checkbox column, label column */
+    grid-template-rows: auto auto !important;
+    grid-template-areas:
+        "error error"
+        "checkbox label" !important;
+    gap: 0.35rem 0.5rem !important;
+    align-items: start !important;
 }
 
-    /* Make error message appear above and full-width */
-    fieldset .error {
-        order: -1; /* ensure it stays before checkbox */
-        margin-bottom: 8px; /* spacing */
+    /* Place the error on the top row spanning both columns */
+   fieldset .error {
+        grid-area: error !important;
+        display: block !important;
+        width: 100% !important;
+        margin: 0 0 0.3rem 0 !important;
     }
 
-    /* Make checkbox + label stay on the same row */
-
-    fieldset input[type="checkbox"],
-    fieldset label {
-        display: inline-block;
-        vertical-align: middle;
-    }
 .intro p {
     color: var(--grey-500) !important;
     text-align: center !important;
