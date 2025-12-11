@@ -880,9 +880,24 @@ input[type="checkbox"] {
     min-width: 18px !important;
     margin-top: 6px;
 }
-fieldset{
-    display:flex;
+fieldset {
+    display: flex;
+    flex-direction: column; /* stack items vertically */
 }
+
+    /* Make error message appear above and full-width */
+    fieldset .error {
+        order: -1; /* ensure it stays before checkbox */
+        margin-bottom: 8px; /* spacing */
+    }
+
+    /* Make checkbox + label stay on the same row */
+
+    fieldset input[type="checkbox"],
+    fieldset label {
+        display: inline-block;
+        vertical-align: middle;
+    }
 .intro p {
     color: var(--grey-500) !important;
     text-align: center !important;
