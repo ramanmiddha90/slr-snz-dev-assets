@@ -112,6 +112,11 @@
                 if (exists(target)) target.style.display = "none";
             }
         });
+        const anyVisible = [...document.querySelectorAll('#IdpSection button')]
+            .some(btn => btn.offsetParent !== null);
+        if (!anyVisible) {
+            $("#IdpSection").hide();
+        }
     };
 
     const configureIdpsVisibility = () => {
