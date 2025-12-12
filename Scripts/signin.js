@@ -115,7 +115,7 @@
         const anyVisible = [...document.querySelectorAll('#IdpSection button')]
             .some(btn => btn.offsetParent !== null);
         if (!anyVisible) {
-            const idpTarget = document.getElementById(IdpSection);
+            const idpTarget = document.getElementById("IdpSection");
             if (exists(idpTarget)) idpTarget.style.display = "none";
         }
     };
