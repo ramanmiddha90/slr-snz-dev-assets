@@ -169,7 +169,7 @@
         const fimnetBtn = document.getElementById('FIMNET_LOGIN');
         if (exists(snzBtn)) snzBtn.addEventListener('click', () => setQueryParam('p', `B2C_1A_SLR_SNZ_IDP`));
         if (exists(swissBtn)) swissBtn.addEventListener('click', () => setQueryParam('p', `B2C_1A_SOLAR_SANDOZID_PROD_SWISSRX_LOGIN`));
-        if (exists(fimnetBtn)) swissBtn.addEventListener('click', () => setQueryParam('p', `B2C_1A_SLR_SNZ_FIMNET_IDP`));
+        if (exists(fimnetBtn)) fimnetBtn.addEventListener('click', () => setQueryParam('p', `B2C_1A_SLR_SNZ_FIMNET_IDP`));
         const resetAnchor = document.getElementById('resetPassword');
         if (exists(resetAnchor)) resetAnchor.addEventListener('click', () => {
             window.location.href = buildAuthorizeUrl(`${policyPrefix}_${policyMap.PASSRESET}`);
