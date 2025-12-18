@@ -260,7 +260,7 @@
         try {
             //$("select").each(function () {
 
-                var id = "#" + $(this).attr("id");
+                //var id = "#" + $(this).attr("id");
                
                 var idSelector = ".customdropdown";
                 var idSelectorLabel = idSelector + "_label";
