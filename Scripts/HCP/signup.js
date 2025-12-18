@@ -260,9 +260,10 @@
         try {
             $("select").each(function () {
 
-                var idSelector = "#" + $(this).attr("id");
+                var id = "#" + $(this).attr("id");
+               
+                var idSelector = ".customdropdown";
                 var idSelectorLabel = idSelector + "_label";
-
                 //if ($(this).attr("id") != "country")
                 //    return;
                 console.log('Select2 loaded!');
@@ -436,6 +437,7 @@
                     // Dropdown options
                     if (uxField.type === "dropdown" && Array.isArray(uxField.options)) {
                         const $select = $(`select#${uxField.name}`);
+                        $select.addClass('customdropdown');
                         $select.find("option:not(:first)").remove();
 
                         const sorted = [...uxField.options].sort((a, b) => String(a.key).localeCompare(String(b.key)));
