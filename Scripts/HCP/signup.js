@@ -201,6 +201,7 @@
     const Countries = (() => {
         const load = (countries) => {
             const dropdown = qs(SELECTORS.countryDropdown);
+            $("#country").addClass('customdropdown');
             if (!dropdown || !countries) return;
             Object.entries(countries).forEach(([name, code]) => {
                 const option = document.createElement("option");
