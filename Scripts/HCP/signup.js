@@ -258,7 +258,7 @@
     const LoadDDStyle = ((fieldId) => {
 
         try {
-            $("select").each(function () {
+            //$("select").each(function () {
 
                 var id = "#" + $(this).attr("id");
                
@@ -335,7 +335,7 @@
                 $(idSelector).on('select2:close', function () {
                     $('.select2-selection__arrow').css('transform', 'rotate(0deg)');
                 });
-            });
+           /* });*/
         }
         catch {
 
