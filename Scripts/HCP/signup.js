@@ -201,7 +201,6 @@
     const Countries = (() => {
         const load = (countries) => {
             const dropdown = qs(SELECTORS.countryDropdown);
-            $("#country").addClass('customdropdown');
             if (!dropdown || !countries) return;
             Object.entries(countries).forEach(([name, code]) => {
                 const option = document.createElement("option");
@@ -259,14 +258,13 @@
     const LoadDDStyle = ((fieldId) => {
 
         try {
-            //$("select").each(function () {
+            $("select").each(function () {
 
-                //var id = "#" + $(this).attr("id");
-               
-                var idSelector = ".customdropdown";
+                var idSelector = "#" + $(this).attr("id");
                 var idSelectorLabel = idSelector + "_label";
-                //if ($(this).attr("id") != "country")
-                //    return;
+
+                if ($(this).attr("id") != "country")
+                    return;
                 console.log('Select2 loaded!');
                 // Initialize Select2
                 $(idSelector).select2({
@@ -336,7 +334,7 @@
                 $(idSelector).on('select2:close', function () {
                     $('.select2-selection__arrow').css('transform', 'rotate(0deg)');
                 });
-           /* });*/
+            });
         }
         catch {
 
@@ -438,7 +436,6 @@
                     // Dropdown options
                     if (uxField.type === "dropdown" && Array.isArray(uxField.options)) {
                         const $select = $(`select#${uxField.name}`);
-                        $select.addClass('customdropdown');
                         $select.find("option:not(:first)").remove();
 
                         const sorted = [...uxField.options].sort((a, b) => String(a.key).localeCompare(String(b.key)));
