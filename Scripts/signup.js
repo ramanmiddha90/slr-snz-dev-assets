@@ -396,6 +396,7 @@
 
             if (!uxField) return;
 
+            const attributeListId = $("#attributeList");
             const fieldId = uxField.name;
             const fieldAttr = `.${fieldId}_li`;
             const fieldAttrLabelId = `#${fieldId}_label`;
@@ -423,8 +424,8 @@
                         }
                     }
 
+                    attributeListId.append($(fieldAttr));
                     $(fieldAttr).show();
-
                     // Inject custom content
                     if (uxField.content && uxField.content.value !== undefined) {
                         const path = atob(uxField.content.path);
