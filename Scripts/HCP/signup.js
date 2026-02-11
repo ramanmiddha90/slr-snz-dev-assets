@@ -556,8 +556,8 @@
             const queryParams = safeJSON($(SELECTORS.queryParams).val(), {});
             const currentStep = Number($(SELECTORS.currentStep).val() || 0);
             // Use FormConfigLoader instead of reading from DOM
-            const formConfig = FormConfigLoader.get();
-
+            const config = FormConfigLoader.get();
+            formConfig = config.formConfig;
             Steps.setHeader(currentStep);
 
             if (currentStep === 0) {
