@@ -81,6 +81,24 @@
         node.alt = ok ? "check-mark" : "cross-mark";
     };
 
+    const fetchJSON = async (url, options = {}) => {
+        try {
+            const response = await fetch(url, {
+                method: "GET",
+                headers: { "Content-Type": "application/json", ...options.headers },
+                ...options,
+            });
+            if (!response.ok) {
+                console.error(`Fetch failed with status ${response.status}: ${response.statusText}`);
+                return null;
+            }
+            return await response.json();
+        } catch (error) {
+            console.error("Fetch error:", error);
+            return null;
+        }
+    };
+
     // ==========================
     // Password Strength & Toggle
     // ==========================
@@ -374,6 +392,83 @@
     })();
 
     // ==========================
+    // Form Configuration Loader (API-based)
+    // ==========================
+    const FormConfigLoader = (() => {
+        let cachedConfig = null;
+        let loadPromise = null;
+
+        const getApiUrl = () => {
+            // Get API URL from URL params, or use a default endpoint
+            const apiUrl = getUrlParam("formConfigApiUrl");
+           if (apiUrl) {
+                return decodeURIComponent(apiUrl);
+            }
+            // Fallback: use a default endpoint path
+            return "/api/form-config";
+        };
+
+        const getCountryCode = () => {
+            // Extract country code from URL params or referrer
+            const cc = getUrlParam("cc") || getReferrerParam("cc") || getUrlParam("countryCode");
+            return cc ? decodeURIComponent(cc) : null;
+        };
+
+        const load = async () => {
+            // Return cached config if already loaded
+            if (cachedConfig) {
+                return cachedConfig;
+            }
+
+            // Return existing promise if already loading
+            if (loadPromise) {
+                return loadPromise;
+            }
+
+            loadPromise = (async () => {
+                try {
+                    // const apiUrl = getApiUrl();
+                    // const cc = getCountryCode();
+                    
+                    // // Build query parameters
+                    // const params = new URLSearchParams();
+                    // if (cc) params.append("cc", cc);
+
+                    // const url = `${apiUrl}${params.toString() ? "?" + params.toString() : ""}`;
+                   const url="https://fa-solar-dev-apis.azurewebsites.net/api/solar/config?at=HCP&ft=REGISTRATION&cc=ES&UI_Locales=ES";    
+                    console.log("Fetching FormConfig from:", url);
+                    const data = await fetchJSON(url);
+                    
+                    if (data && typeof data === "object") {
+                        cachedConfig = data;
+                        console.log("FormConfig loaded successfully:", cachedConfig);
+                        return cachedConfig;
+                    } else {
+                        console.warn("FormConfig API returned invalid data, using empty config");
+                        cachedConfig = {};
+                        return cachedConfig;
+                    }
+                } catch (error) {
+                    console.error("Error loading FormConfig:", error);
+                    // Return empty config as fallback
+                    cachedConfig = {};
+                    return cachedConfig;
+                } finally {
+                    loadPromise = null; // Clear promise after loading
+                }
+            })();
+
+            return loadPromise;
+        };
+
+        const get = () => {
+            return cachedConfig || {};
+        };
+
+        return { load, get };
+    })();
+
+    // ==========================
     // Field loader (per-step)
     // ==========================
     const Fields = (() => {
@@ -460,7 +555,8 @@
         const load = () => {
             const queryParams = safeJSON($(SELECTORS.queryParams).val(), {});
             const currentStep = Number($(SELECTORS.currentStep).val() || 0);
-            const formConfig = $.parseJSON($(SELECTORS.formConfig).val() || "{}");
+            // Use FormConfigLoader instead of reading from DOM
+            const formConfig = FormConfigLoader.get();
 
             Steps.setHeader(currentStep);
 
@@ -514,9 +610,22 @@
             clearInterval(handle);
         };
 
-        const start = () => {
-            startedAt = Date.now();
-            handle = setInterval(tryInit, POLL_MS);
+        const start = async () => {
+            try {
+                // Load FormConfig before initializing UI
+                console.log("Boot: Loading FormConfig...");
+                await FormConfigLoader.load();
+                console.log("Boot: FormConfig loaded, starting poll for UI readiness...");
+                
+                // Now start polling for page readiness
+                startedAt = Date.now();
+                handle = setInterval(tryInit, POLL_MS);
+            } catch (error) {
+                console.error("Boot: Error during startup:", error);
+                // Continue anyway with empty config
+                startedAt = Date.now();
+                handle = setInterval(tryInit, POLL_MS);
+            }
         };
 
         return { start };
@@ -533,11 +642,12 @@
         Config,
         Fields,
         Boot,
+        FormConfigLoader,
     };
 
     // Auto-start when DOM is ready (and still tolerate late rendering via polling)
     if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", Boot.start);
+        document.addEventListener("DOMContentLoaded", () => Boot.start());
     } else {
         Boot.start();
     }
