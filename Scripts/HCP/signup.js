@@ -436,7 +436,7 @@
                     var queryParams = safeJSON($(SELECTORS.queryParams).val(), {});
                     var apiBaseUrl = "https://fa-solar-dev-apis.azurewebsites.net/api/solar/config";
                     console.log();
-                    var url = `${apiBaseUrl}?at=${queryParams.countryCode.toString()}&UI_Locales=${queryParams.userLanguage}&at=${queryParams.applicationType}`
+                    var url = `${apiBaseUrl}?ft=REGISTRATION&at=${queryParams.countryCode.toString()}&UI_Locales=${queryParams.userLanguage}&at=${queryParams.applicationType}`
                     //const url="https://fa-solar-dev-apis.azurewebsites.net/api/solar/config?at=HCP&ft=REGISTRATION&cc=ES&UI_Locales=ES";    
                     console.log("Fetching FormConfig from:", url);
                     const data = await fetchJSON(url);
