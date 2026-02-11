@@ -557,7 +557,7 @@
             const currentStep = Number($(SELECTORS.currentStep).val() || 0);
             // Use FormConfigLoader instead of reading from DOM
             const config = FormConfigLoader.get();
-            formConfig = config.formConfig;
+           var formConfig = config.formConfig;
             Steps.setHeader(currentStep);
 
             if (currentStep === 0) {
