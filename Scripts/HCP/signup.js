@@ -397,6 +397,9 @@
     const FormConfigLoader = (() => {
         let cachedConfig = null;
         let loadPromise = null;
+        const CACHE_PREFIX = "slr_form_config_";
+        const CACHE_EXPIRY_PREFIX = "slr_form_config_expiry_";
+        const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
         const getApiUrl = () => {
             // Get API URL from URL params, or use a default endpoint
@@ -414,9 +417,68 @@
             return cc ? decodeURIComponent(cc) : null;
         };
 
+        const getCacheKey = () => {
+            try {
+                const queryParams = safeJSON($(SELECTORS.queryParams).val(), {});
+                const at = queryParams.applicationType || "unknown";
+                const cc = queryParams.countryCode || "unknown";
+                const lang = queryParams.userLanguage || "unknown";
+                return `${CACHE_PREFIX}${at}_${cc}_${lang}`;
+            } catch (error) {
+                console.warn("Error generating cache key:", error);
+                return `${CACHE_PREFIX}default`;
+            }
+        };
+
+        const getCacheExpiryKey = () => {
+            return `${CACHE_EXPIRY_PREFIX}${getCacheKey().replace(CACHE_PREFIX, "")}`;
+        };
+
+        const getCachedConfig = () => {
+            try {
+                const cacheKey = getCacheKey();
+                const expiryKey = getCacheExpiryKey();
+                const cached = sessionStorage.getItem(cacheKey);
+                const expiry = sessionStorage.getItem(expiryKey);
+                
+                if (cached && expiry && Date.now() < parseInt(expiry)) {
+                    console.log(`FormConfig cache hit for key: ${cacheKey}`);
+                    return safeJSON(cached, null);
+                } else {
+                    // Cache expired, clear it
+                    sessionStorage.removeItem(cacheKey);
+                    sessionStorage.removeItem(expiryKey);
+                    console.log(`FormConfig cache expired or not found for key: ${cacheKey}`);
+                }
+            } catch (error) {
+                console.warn("Error reading from sessionStorage:", error);
+            }
+            return null;
+        };
+
+        const setCachedConfig = (config) => {
+            try {
+                const cacheKey = getCacheKey();
+                const expiryKey = getCacheExpiryKey();
+                sessionStorage.setItem(cacheKey, JSON.stringify(config));
+                sessionStorage.setItem(expiryKey, String(Date.now() + CACHE_TTL));
+                console.log(`FormConfig cached with key: ${cacheKey}`);
+            } catch (error) {
+                console.warn("Error writing to sessionStorage:", error);
+            }
+        };
+
         const load = async () => {
-            // Return cached config if already loaded
+            // Return in-memory cache if already loaded
             if (cachedConfig) {
+                return cachedConfig;
+            }
+
+            // Check session storage for persisted cache
+            const storedConfig = getCachedConfig();
+            if (storedConfig) {
+                cachedConfig = storedConfig;
+                console.log("FormConfig restored from sessionStorage:", cachedConfig);
                 return cachedConfig;
             }
 
@@ -427,12 +489,6 @@
 
             loadPromise = (async () => {
                 try {
-                    // const apiUrl = getApiUrl();
-                    // const cc = getCountryCode();
-
-                    // // Build query parameters
-                    // const params = new URLSearchParams();
-                    // if (cc) params.append("cc", cc);
                     var queryParams = safeJSON($(SELECTORS.queryParams).val(), {});
                     var apiBaseUrl = "https://fa-solar-dev-apis.azurewebsites.net/api/solar/config";
                     console.log();
@@ -443,6 +499,7 @@
                     
                     if (data && typeof data === "object") {
                         cachedConfig = data;
+                        setCachedConfig(data); // Persist to sessionStorage
                         console.log("FormConfig loaded successfully:", cachedConfig);
                         return cachedConfig;
                     } else {
@@ -464,10 +521,23 @@
         };
 
         const get = () => {
-            return cachedConfig || {};
+            return cachedConfig || getCachedConfig() || {};
         };
 
-        return { load, get };
+        const clearCache = () => {
+            cachedConfig = null;
+            try {
+                const cacheKey = getCacheKey();
+                const expiryKey = getCacheExpiryKey();
+                sessionStorage.removeItem(cacheKey);
+                sessionStorage.removeItem(expiryKey);
+                console.log(`FormConfig cache cleared for key: ${cacheKey}`);
+            } catch (error) {
+                console.warn("Error clearing sessionStorage:", error);
+            }
+        };
+
+        return { load, get, clearCache };
     })();
 
     // ==========================
