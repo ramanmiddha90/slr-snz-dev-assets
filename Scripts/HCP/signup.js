@@ -421,9 +421,14 @@
             try {
                 const queryParams = safeJSON($(SELECTORS.queryParams).val(), {});
                 const at = queryParams.applicationType || "HCP";
-                const cc = queryParams.countryCode || "CA";
+                const cc = queryParams.countryCode;
                 const lang = queryParams.userLanguage || "EN";
+
+                if (queryParams.countryCode) { 
+                    return `${CACHE_PREFIX}${at}_${lang}`;
+                }
                 return `${CACHE_PREFIX}${at}_${cc}_${lang}`;
+              
             } catch (error) {
                 console.warn("Error generating cache key:", error);
                 return `${CACHE_PREFIX}default`;
