@@ -425,9 +425,10 @@
                 const lang = queryParams.userLanguage || "EN";
 
                 if (queryParams.countryCode) { 
-                    return `${CACHE_PREFIX}${at}_${lang}`;
+                    return `${CACHE_PREFIX}${at}_${cc}_${lang}`;
+                   
                 }
-                return `${CACHE_PREFIX}${at}_${cc}_${lang}`;
+                return `${CACHE_PREFIX}${at}_${lang}`;
               
             } catch (error) {
                 console.warn("Error generating cache key:", error);
