@@ -688,11 +688,9 @@
             try {
                 // Load FormConfig before initializing UI
                 console.log("Boot: Loading FormConfig...");
-                //if ($(".container")) {
-                //    $(".container").hide();
-                //}
+                setDisabled($(SELECTORS.continueBtn),true);
                 await FormConfigLoader.load();
-             
+                setDisabled($(SELECTORS.continueBtn), false);
                 console.log("Boot: FormConfig loaded, starting poll for UI readiness...");
                 
                 // Now start polling for page readiness
