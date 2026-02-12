@@ -513,7 +513,7 @@
                     cachedConfig = {};
                     return cachedConfig;
                 } finally {
-                    $(".container").show();
+                    //$(".container").show();
                     loadPromise = null; // Clear promise after loading
                 }
             })();
@@ -680,7 +680,7 @@
             Fields.load();
             LoadDDStyle();
             UI.attachCancelHandler();
-            $(".container").show();
+            //$(".container").show();
             clearInterval(handle);
         };
 
@@ -688,9 +688,9 @@
             try {
                 // Load FormConfig before initializing UI
                 console.log("Boot: Loading FormConfig...");
-                if ($(".container")) {
-                    $(".container").hide();
-                }
+                //if ($(".container")) {
+                //    $(".container").hide();
+                //}
                 await FormConfigLoader.load();
              
                 console.log("Boot: FormConfig loaded, starting poll for UI readiness...");
