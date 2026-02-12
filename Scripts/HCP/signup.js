@@ -679,7 +679,7 @@
             Fields.load();
             LoadDDStyle();
             UI.attachCancelHandler();
-            $("#container").show();
+            $(".container").show();
             clearInterval(handle);
         };
 
@@ -687,8 +687,8 @@
             try {
                 // Load FormConfig before initializing UI
                 console.log("Boot: Loading FormConfig...");
-                if ($("#container")) {
-                    $("#container").hide();
+                if ($(".container")) {
+                    $(".container").hide();
                 }
                 await FormConfigLoader.load();
              
