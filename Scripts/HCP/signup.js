@@ -420,9 +420,9 @@
         const getCacheKey = () => {
             try {
                 const queryParams = safeJSON($(SELECTORS.queryParams).val(), {});
-                const at = queryParams.applicationType || "unknown";
-                const cc = queryParams.countryCode || "unknown";
-                const lang = queryParams.userLanguage || "unknown";
+                const at = queryParams.applicationType || "HCP";
+                const cc = queryParams.countryCode || "CA";
+                const lang = queryParams.userLanguage || "EN";
                 return `${CACHE_PREFIX}${at}_${cc}_${lang}`;
             } catch (error) {
                 console.warn("Error generating cache key:", error);
@@ -686,7 +686,11 @@
             try {
                 // Load FormConfig before initializing UI
                 console.log("Boot: Loading FormConfig...");
+                if ($("#api")) {
+                    $("#api").hide();
+                }
                 await FormConfigLoader.load();
+                $("#api").show();
                 console.log("Boot: FormConfig loaded, starting poll for UI readiness...");
                 
                 // Now start polling for page readiness
