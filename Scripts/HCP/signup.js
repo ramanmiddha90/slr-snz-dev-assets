@@ -686,11 +686,11 @@
             try {
                 // Load FormConfig before initializing UI
                 console.log("Boot: Loading FormConfig...");
-                if ($("#api")) {
-                    $("#api").hide();
+                if ($("#container")) {
+                    $("#container").hide();
                 }
                 await FormConfigLoader.load();
-                $("#api").show();
+                $("#container").show();
                 console.log("Boot: FormConfig loaded, starting poll for UI readiness...");
                 
                 // Now start polling for page readiness
