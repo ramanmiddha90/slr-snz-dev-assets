@@ -679,6 +679,7 @@
             Fields.load();
             LoadDDStyle();
             UI.attachCancelHandler();
+            $("#container").show();
             clearInterval(handle);
         };
 
@@ -690,7 +691,7 @@
                     $("#container").hide();
                 }
                 await FormConfigLoader.load();
-                $("#container").show();
+             
                 console.log("Boot: FormConfig loaded, starting poll for UI readiness...");
                 
                 // Now start polling for page readiness
