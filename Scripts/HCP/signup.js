@@ -513,6 +513,7 @@
                     cachedConfig = {};
                     return cachedConfig;
                 } finally {
+                    $(".container").show();
                     loadPromise = null; // Clear promise after loading
                 }
             })();
