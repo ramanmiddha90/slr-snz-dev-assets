@@ -376,7 +376,7 @@
             catch {
                 console.log("Error setting sl logo")
             }
-        }
+        };
         const load = () => {
             const currentStepEl = qs(SELECTORS.currentStep);
             const formConfigEl = qs(SELECTORS.formConfig);

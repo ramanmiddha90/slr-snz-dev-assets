@@ -162,7 +162,8 @@
         }
         catch {
             console.log("Error setting sl logo");
-        };
+        }
+    };
     /*** ───────────────────── UI bootstrapping ───────────────────── ***/
     const setCustomLabels = () => {
         const api = document.getElementById('api');

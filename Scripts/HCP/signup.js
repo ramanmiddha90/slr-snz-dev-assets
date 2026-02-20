@@ -467,7 +467,7 @@
             catch {
                 console.log("Error setting sl logo")
             }
-        }
+        };
         const load = () => {
             const queryParams = safeJSON($(SELECTORS.queryParams).val(), {});
             const currentStep = Number($(SELECTORS.currentStep).val() || 0);
