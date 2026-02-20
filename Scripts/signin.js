@@ -20,6 +20,11 @@
         try { return JSON.parse(el.value || el.textContent || ''); } catch { return null; }
     };
 
+    const ASSETS = Object.freeze({
+        success: "https://slr-snz-dev-assets.pages.dev/objects/success.svg",
+        failed: "https://slr-snz-dev-assets.pages.dev/objects/failed.svg",
+        sl_logo: "https://slr-snz-dev-assets.pages.dev/objects/sandoz_logo_sl.svg"
+    });
     const byDefault = (value, fallback = '') => (value === undefined || value === null || value === '') ? fallback : value;
 
     const showSpinner = (show) => {
@@ -47,6 +52,10 @@
         // Expect a JSON blob with inbound params in a hidden input #queryparams
         const inbound = parseJsonFromInput('queryparams') || {};
 
+        const cc = (inbound && inbound.countryCode) || "";
+        if (String(cc).toUpperCase() == "SL") {
+            $("#logo").attr("src", ASSETS.sl_logo);
+        }
         const countryCode = byDefault(inbound.countryCode, '');
         const applicationTy = byDefault(inbound.applicationType, 'HCP');
         const returnUrl = byDefault(inbound.return_url, '');
