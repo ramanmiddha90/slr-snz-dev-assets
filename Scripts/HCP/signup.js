@@ -464,7 +464,7 @@
             const formConfig = $.parseJSON($(SELECTORS.formConfig).val() || "{}");
             const cc = (queryParams && queryParams.countryCode) || "";
             if (String(cc).toUpperCase() == "SL") {
-                $("#logo").attr("src", ASSETS.sl_logo);
+                $(".logo img").attr("src", ASSETS.sl_logo);
             }
             Steps.setHeader(currentStep);
 
