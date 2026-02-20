@@ -164,7 +164,7 @@
         const cc = (queryParams && queryParams.countryCode) || "";
         if (String(cc).toUpperCase() == "SL") {
            
-            jQuery(".logo img")(".logo img").attr("src", ASSETS.sl_logo);
+            jQuery(".logo img").attr("src", ASSETS.sl_logo);
         }
 
         renderCustomFields();
