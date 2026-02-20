@@ -126,7 +126,7 @@ const Fields = (() => {
         const queryParams = safeJSON($(SELECTORS.queryParams).val(), {});
         const cc = (queryParams && queryParams.countryCode) || "";
         if (String(cc).toUpperCase() == "SL") {
-            if ($(".logo img"))
+            if ($(".logo img").length > 0)
                 $(".logo img").attr("src", ASSETS.sl_logo);
             else {
                 $("#logo").attr("src", ASSETS.sl_logo1);
