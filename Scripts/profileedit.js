@@ -103,7 +103,7 @@
     const ASSETS = Object.freeze({
         success: "https://slr-snz-dev-assets.pages.dev/objects/success.svg",
         failed: "https://slr-snz-dev-assets.pages.dev/objects/failed.svg",
-        sl_logo: "https://slr-snz-dev-assets.pages.dev/objects/sandoz_logo_sl.svg"
+        sl_logo: "https://slr-snz-dev-assets.pages.dev/objects/sandoz_logo_sl_1.svg"
     });
     // ==========================
     // Validation
