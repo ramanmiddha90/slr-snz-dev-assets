@@ -163,7 +163,7 @@
         const queryParams = parseJsonFromInput('queryparams') || {};
         const cc = (queryParams && queryParams.countryCode) || "";
         if (String(cc).toUpperCase() == "SL") {
-            https://ramamiddha90.github.io/ADSolarAssets/objects/sandoz_logo_sl.svg
+            https://ramamiddha90.github.io/ADSolarAssets/objects/sandoz_logo_sl_1.svg
             jQuery(".logo img").attr("src", ASSETS.sl_logo);
         }
 
