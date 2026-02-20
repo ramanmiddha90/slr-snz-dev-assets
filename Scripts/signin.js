@@ -157,13 +157,12 @@
             const queryParams = parseJsonFromInput('queryparams') || {};
             const cc = (queryParams && queryParams.countryCode) || "";
             if (String(cc).toUpperCase() == "SL") {
-
                 jQuery(".logo img").attr("src", ASSETS.sl_logo);
             }
         }
         catch {
-            console.log("Error setting sl logo")
-        }
+            console.log("Error setting sl logo");
+        };
     /*** ───────────────────── UI bootstrapping ───────────────────── ***/
     const setCustomLabels = () => {
         const api = document.getElementById('api');
