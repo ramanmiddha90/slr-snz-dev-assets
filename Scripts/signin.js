@@ -163,7 +163,8 @@
         const queryParams = parseJsonFromInput('queryparams') || {};
         const cc = (queryParams && queryParams.countryCode) || "";
         if (String(cc).toUpperCase() == "SL") {
-            $(".logo img").attr("src", ASSETS.sl_logo);
+            https://ramamiddha90.github.io/ADSolarAssets/objects/sandoz_logo_sl.svg
+            jQuery(".logo img").attr("src", ASSETS.sl_logo);
         }
 
         renderCustomFields();
