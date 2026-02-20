@@ -52,10 +52,7 @@
         // Expect a JSON blob with inbound params in a hidden input #queryparams
         const inbound = parseJsonFromInput('queryparams') || {};
 
-        const cc = (inbound && inbound.countryCode) || "";
-        if (String(cc).toUpperCase() == "SL") {
-            $("#logo").attr("src", ASSETS.sl_logo);
-        }
+     
         const countryCode = byDefault(inbound.countryCode, '');
         const applicationTy = byDefault(inbound.applicationType, 'HCP');
         const returnUrl = byDefault(inbound.return_url, '');
@@ -161,6 +158,12 @@
         if (exists(api)) {
             const intro = api.querySelector('.intro');
             if (intro) intro.insertAdjacentHTML('beforebegin', "<div class='pageheader intropageheader intro'><p id='intropageheader_lbl'>Login</p></div>");
+        }
+
+        const queryParams = parseJsonFromInput('queryparams') || {};
+        const cc = (queryParams && queryParams.countryCode) || "";
+        if (String(cc).toUpperCase() == "SL") {
+            $("#logo").attr("src", ASSETS.sl_logo);
         }
 
         renderCustomFields();
