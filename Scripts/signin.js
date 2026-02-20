@@ -152,6 +152,18 @@
         return candidates.some((el) => isVisible(el));
     };
 
+    const setHeaderLogo = () => {
+        try {
+            const queryParams = parseJsonFromInput('queryparams') || {};
+            const cc = (queryParams && queryParams.countryCode) || "";
+            if (String(cc).toUpperCase() == "SL") {
+
+                jQuery(".logo img").attr("src", ASSETS.sl_logo);
+            }
+        }
+        catch {
+            console.log("Error setting sl logo")
+        }
     /*** ───────────────────── UI bootstrapping ───────────────────── ***/
     const setCustomLabels = () => {
         const api = document.getElementById('api');
@@ -159,14 +171,7 @@
             const intro = api.querySelector('.intro');
             if (intro) intro.insertAdjacentHTML('beforebegin', "<div class='pageheader intropageheader intro'><p id='intropageheader_lbl'>Login</p></div>");
         }
-
-        const queryParams = parseJsonFromInput('queryparams') || {};
-        const cc = (queryParams && queryParams.countryCode) || "";
-        if (String(cc).toUpperCase() == "SL") {
-           
-            jQuery(".logo img").attr("src", ASSETS.sl_logo);
-        }
-
+        setHeaderLogo();
         renderCustomFields();
         // configureIdpsVisibility(); // Uncomment if you need to manage IDP visibility dynamically
 

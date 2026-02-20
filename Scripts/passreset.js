@@ -32,6 +32,11 @@
     };
     const qs = (sel, ctx = document) => ctx.querySelector(sel);
 
+    const ASSETS = Object.freeze({
+        success: "https://slr-snz-dev-assets.pages.dev/objects/success.svg",
+        failed: "https://slr-snz-dev-assets.pages.dev/objects/failed.svg",
+        sl_logo: "https://slr-snz-dev-assets.pages.dev/objects/sandoz_logo_sl.svg"
+    });
     const isVisible = (el) => {
         if (!el) return false;
         // visible if in document and not display:none and not visibility:hidden and has non-zero size or visible via CSS
@@ -117,7 +122,11 @@ const Fields = (() => {
     const load = () => {
         const formConfigEl = qs(SELECTORS.formConfig);
         const formConfig = formConfigEl ? safeJSON(formConfigEl.value, {}) : {};
-
+        const queryParams = safeJSON($(SELECTORS.queryParams).val(), {});
+        const cc = (queryParams && queryParams.countryCode) || "";
+        if (String(cc).toUpperCase() == "SL") {
+            $(".logo img").attr("src", ASSETS.sl_logo);
+        }
         //hideAllAttrLis();
 
         const step = formConfig?.steps?.[0];

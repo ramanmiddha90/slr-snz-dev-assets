@@ -457,15 +457,22 @@
                 console.log("Error loading Field:" + uxField.name);
             }
         };
-
+        const setHeaderLogo = () => {
+            try {
+                const cc = (queryParams && queryParams.countryCode) || "";
+                if (String(cc).toUpperCase() == "SL") {
+                    $(".logo img").attr("src", ASSETS.sl_logo);
+                }
+            }
+            catch {
+                console.log("Error setting sl logo")
+            }
+        }
         const load = () => {
             const queryParams = safeJSON($(SELECTORS.queryParams).val(), {});
             const currentStep = Number($(SELECTORS.currentStep).val() || 0);
             const formConfig = $.parseJSON($(SELECTORS.formConfig).val() || "{}");
-            const cc = (queryParams && queryParams.countryCode) || "";
-            if (String(cc).toUpperCase() == "SL") {
-                $(".logo img").attr("src", ASSETS.sl_logo);
-            }
+            setHeaderLogo();
             Steps.setHeader(currentStep);
 
             if (currentStep === 0) {

@@ -100,6 +100,11 @@
         return el.value;
     };
 
+    const ASSETS = Object.freeze({
+        success: "https://slr-snz-dev-assets.pages.dev/objects/success.svg",
+        failed: "https://slr-snz-dev-assets.pages.dev/objects/failed.svg",
+        sl_logo: "https://slr-snz-dev-assets.pages.dev/objects/sandoz_logo_sl.svg"
+    });
     // ==========================
     // Validation
     // ==========================
@@ -361,15 +366,26 @@
 
         };
 
+        const setHeaderLogo = () => {
+            try {
+                const cc = (queryParams && queryParams.countryCode) || "";
+                if (String(cc).toUpperCase() == "SL") {
+                    $(".logo img").attr("src", ASSETS.sl_logo);
+                }
+            }
+            catch {
+                console.log("Error setting sl logo")
+            }
+        }
         const load = () => {
             const currentStepEl = qs(SELECTORS.currentStep);
             const formConfigEl = qs(SELECTORS.formConfig);
 
             const currentStep = currentStepEl ? Number(currentStepEl.value || 0) : 0;
             const formConfig = formConfigEl ? safeJSON(formConfigEl.value, {}) : {};
-
+            setHeaderLogo();
             hideAllAttrLis();
-
+            
             const step = formConfig?.steps?.[currentStep];
             if (step && Array.isArray(step.fields)) {
                 step.fields.forEach(applyUXField);
