@@ -39,6 +39,7 @@
     const ASSETS = Object.freeze({
         success: "https://slr-snz-dev-assets.pages.dev/objects/success.svg",
         failed: "https://slr-snz-dev-assets.pages.dev/objects/failed.svg",
+        sl_logo:"https://slr-snz-dev-assets.pages.dev/objects/sandoz_logo_sl.svg"
     });
 
     // ==========================
@@ -461,7 +462,10 @@
             const queryParams = safeJSON($(SELECTORS.queryParams).val(), {});
             const currentStep = Number($(SELECTORS.currentStep).val() || 0);
             const formConfig = $.parseJSON($(SELECTORS.formConfig).val() || "{}");
-
+            const cc = (queryParams && queryParams.countryCode) || "";
+            if (String(cc).toUpperCase() == "SL") {
+                $("#logo").attr("src", ASSETS.sl_logo);
+            }
             Steps.setHeader(currentStep);
 
             if (currentStep === 0) {
