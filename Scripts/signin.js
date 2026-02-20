@@ -23,7 +23,7 @@
     const ASSETS = Object.freeze({
         success: "https://slr-snz-dev-assets.pages.dev/objects/success.svg",
         failed: "https://slr-snz-dev-assets.pages.dev/objects/failed.svg",
-        sl_logo: "https://slr-snz-dev-assets.pages.dev/objects/sandoz_logo_sl.svg"
+        sl_logo: "https://slr-snz-dev-assets.pages.dev/objects/sandoz_logo_sl_1.svg"
     });
     const byDefault = (value, fallback = '') => (value === undefined || value === null || value === '') ? fallback : value;
 
@@ -163,8 +163,8 @@
         const queryParams = parseJsonFromInput('queryparams') || {};
         const cc = (queryParams && queryParams.countryCode) || "";
         if (String(cc).toUpperCase() == "SL") {
-            https://ramamiddha90.github.io/ADSolarAssets/objects/sandoz_logo_sl_1.svg
-            jQuery(".logo img").attr("src", ASSETS.sl_logo);
+           
+            jQuery(".logo img")(".logo img").attr("src", ASSETS.sl_logo);
         }
 
         renderCustomFields();
