@@ -459,6 +459,7 @@
         };
         const setHeaderLogo = () => {
             try {
+                const queryParams = safeJSON($(SELECTORS.queryParams).val(), {});
                 const cc = (queryParams && queryParams.countryCode) || "";
                 if (String(cc).toUpperCase() == "SL") {
                     $(".logo img").attr("src", ASSETS.sl_logo);
