@@ -35,7 +35,8 @@
     const ASSETS = Object.freeze({
         success: "https://slr-snz-dev-assets.pages.dev/objects/success.svg",
         failed: "https://slr-snz-dev-assets.pages.dev/objects/failed.svg",
-        sl_logo: "https://slr-snz-dev-assets.pages.dev/objects/sandoz_logo_sl.svg"
+        sl_logo: "https://slr-snz-dev-assets.pages.dev/objects/sandoz_logo_sl.svg",
+         sl_logo1: "https://slr-snz-dev-assets.pages.dev/objects/sandoz_logo_sl_1.svg"
     });
     const isVisible = (el) => {
         if (!el) return false;
@@ -125,7 +126,11 @@ const Fields = (() => {
         const queryParams = safeJSON($(SELECTORS.queryParams).val(), {});
         const cc = (queryParams && queryParams.countryCode) || "";
         if (String(cc).toUpperCase() == "SL") {
-            $(".logo img").attr("src", ASSETS.sl_logo);
+            if ($(".logo img"))
+                $(".logo img").attr("src", ASSETS.sl_logo);
+            else {
+                $("#logo").attr("src", ASSETS.sl_logo1);
+            }
         }
         //hideAllAttrLis();
 
