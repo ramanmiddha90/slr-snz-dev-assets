@@ -206,7 +206,10 @@
             Object.entries(countries).forEach(([name, code]) => {
                 const option = document.createElement("option");
                 option.value = String(code);
-                option.textContent = String(name);
+                option.textContent = String(name)
+                    .toLowerCase()
+                    .replace(/\b\w/g, c => c.toUpperCase());
+
                 dropdown.appendChild(option);
             });
         };
