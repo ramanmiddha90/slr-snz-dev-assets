@@ -59,7 +59,7 @@
         const clientId = byDefault(inbound.clientId, '');
         const redirectUri = byDefault(inbound.redirect_uri, '');
         const uiLang = byDefault(inbound.userLanguage, 'EN');
-
+        const etv = byDefault(inbound.emailTemplateVersion, '');
         const originHost = document.domain; // e.g., contoso.b2clogin.com
         const tenantName = originHost.replace('.b2clogin.com', '') + '.onmicrosoft.com';
 
@@ -73,7 +73,8 @@
             return_url: returnUrl,
             cc: countryCode,
             at: applicationTy,
-            UI_Locales: uiLang
+            UI_Locales: uiLang,
+            etv:etv
         });
 
         return `https://${originHost}/${tenantName}/oauth2/v2.0/authorize?${params.toString()}`;
